@@ -22,6 +22,30 @@ export default function Home() {
         >
           Coba Halaman Offline
         </Link>
+        <a
+          href="/admin/trophies/new"
+          className="inline-flex w-full items-center justify-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+        >
+          Admin: Tambah Trophy
+        </a>
+        <a
+          href="/admin/users"
+          className="inline-flex w-full items-center justify-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+        >
+          Admin: Approve Users
+        </a>
+        <a
+          href="/leaderboard"
+          className="inline-flex w-full items-center justify-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+        >
+          Lihat Leaderboard
+        </a>
+        <a
+          href="/me"
+          className="inline-flex w-full items-center justify-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+        >
+          Profil Saya
+        </a>
       </div>
 
       <p className="mt-6 text-xs text-gray-500">

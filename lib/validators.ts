@@ -5,3 +5,13 @@ export const RegisterSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6).max(100),
 });
+
+export const TrophySchema = z.object({
+  userId: z.string().min(1),
+  competition: z.enum(['UCL', 'EUROPA']),
+});
+
+export const LeaderboardQuerySchema = z.object({
+  competition: z.enum(['UCL', 'EUROPA']).optional(),
+  season: z.string().optional(),
+});
