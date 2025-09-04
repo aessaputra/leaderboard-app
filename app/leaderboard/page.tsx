@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/db';
 
-type Row = {
+type LeaderboardRow = {
   id: string;
   name: string;
   ucl: number;
@@ -9,12 +9,19 @@ type Row = {
 };
 
 export default async function LeaderboardPage({
+  // Next 15/React 19: searchParams bisa berupa Promise
   searchParams,
 }: {
-  searchParams?: { season?: string; competition?: 'UCL' | 'EUROPA' };
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const season = searchParams?.season;
-  const comp = searchParams?.competition;
+  const sp = (await searchParams) ?? {};
+  const season = typeof sp.season === 'string' ? sp.season : undefined;
+
+  const compRaw = sp.competition;
+  const comp =
+    compRaw === 'UCL' || compRaw === 'EUROPA'
+      ? (compRaw as 'UCL' | 'EUROPA')
+      : undefined;
 
   const group = await prisma.trophyAward.groupBy({
     by: ['userId', 'competition'],
@@ -32,7 +39,7 @@ export default async function LeaderboardPage({
   });
   const byId = new Map(users.map((u) => [u.id, u.name]));
 
-  const rowsMap = new Map<string, Row>();
+  const rowsMap = new Map<string, LeaderboardRow>();
   for (const g of group) {
     const cur = rowsMap.get(g.userId) ?? {
       id: g.userId,
@@ -84,7 +91,7 @@ export default async function LeaderboardPage({
                   <td className="px-3 py-2">{r.name}</td>
                   <td className="px-3 py-2 text-right">{r.ucl}</td>
                   <td className="px-3 py-2 text-right">{r.europa}</td>
-                  <td className="px-3 py-2 text-right font-medium">
+                <td className="px-3 py-2 text-right font-medium">
                     {r.total}
                   </td>
                 </tr>
