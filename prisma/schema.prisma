@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Competition {
+  UCL
+  EUROPA
+}
+
+model User {
+  id        String        @id @default(cuid())
+  name      String
+  email     String        @unique
+  password  String
+  role      Role          @default(USER)
+  approved  Boolean       @default(false)
+  trophies  TrophyAward[]
+  createdAt DateTime      @default(now())
+}
+
+model TrophyAward {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id])
+  competition Competition
+  season      String
+  createdBy   String
+  createdAt   DateTime     @default(now())
+}

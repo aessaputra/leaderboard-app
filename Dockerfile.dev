@@ -1,0 +1,30 @@
+# Dockerfile.dev
+FROM node:20-alpine
+
+WORKDIR /app
+RUN apk add --no-cache libc6-compat openssl
+
+# pnpm via corepack
+ENV PNPM_HOME="/root/.local/share/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+# --- Penting: copy lockfile + prisma lebih dulu ---
+COPY package.json pnpm-lock.yaml* ./
+COPY prisma ./prisma
+
+# --- Izinkan build scripts yang diblokir pnpm v10 (tanpa prompt) ---
+RUN pnpm approve-builds prisma @prisma/client @prisma/engines sharp bcrypt @tailwindcss/oxide
+
+# --- Hindari postinstall saat install (schema sudah ada sih, tapi aman) ---
+ENV PNPM_SKIP_POSTINSTALL=1
+RUN pnpm install --frozen-lockfile
+
+# --- Baru copy seluruh source ---
+COPY . .
+
+# --- Sekarang jalankan postinstall (akan prisma generate) ---
+RUN pnpm postinstall
+
+EXPOSE 3000
+CMD ["sh","-lc","pnpm prisma generate && pnpm dev -p 3000 -H 0.0.0.0"]
