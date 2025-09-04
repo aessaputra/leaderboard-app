@@ -12,7 +12,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Invalid query' }, { status: 400 });
   }
 
-  const where: any = {};
+  const where: any = { approved: true };
   if (parsed.data.season) where.season = parsed.data.season;
   if (parsed.data.competition) where.competition = parsed.data.competition;
 

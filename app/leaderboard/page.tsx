@@ -58,14 +58,46 @@ export default async function LeaderboardPage({
   );
 
   return (
-    <main className="mx-auto max-w-2xl p-6">
-      <h1 className="text-2xl font-bold">Leaderboard</h1>
+    <main className="mx-auto w-full max-w-md md:max-w-2xl p-4 md:p-6">
+      <h1 className="text-xl md:text-2xl font-bold">Leaderboard</h1>
       <p className="mt-1 text-sm text-gray-600">
         {season ? `Musim ${season}` : 'Semua musim'}
         {comp ? ` · Kompetisi ${comp}` : ''}
       </p>
 
-      <div className="mt-4 overflow-x-auto rounded border">
+      {/* Mobile cards */}
+      <ul className="mt-4 space-y-3 md:hidden">
+        {rows.length === 0 ? (
+          <li className="rounded-2xl border p-4 text-sm text-gray-600">
+            Belum ada data trophy.
+          </li>
+        ) : (
+          rows.map((r, i) => (
+            <li
+              key={r.id}
+              className="rounded-2xl border p-4 bg-white shadow-sm"
+            >
+              <div className="flex items-center justify-between">
+                <div className="font-semibold">
+                  {i + 1}. {r.name}
+                </div>
+                <div className="text-xs text-gray-500">{r.total} total</div>
+              </div>
+              <div className="mt-2 flex gap-2 text-sm">
+                <span className="inline-block rounded-full border px-2 py-0.5">
+                  UCL: {r.ucl}
+                </span>
+                <span className="inline-block rounded-full border px-2 py-0.5">
+                  Europa: {r.europa}
+                </span>
+              </div>
+            </li>
+          ))
+        )}
+      </ul>
+
+      {/* Desktop table */}
+      <div className="mt-4 overflow-x-auto rounded border hidden md:block">
         <table className="min-w-full text-sm">
           <thead className="bg-gray-50">
             <tr>

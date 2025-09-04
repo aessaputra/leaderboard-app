@@ -10,6 +10,12 @@ export default function Home() {
       </p>
 
       <div className="mt-6 space-y-3">
+        <a
+          href="/trophies/new"
+          className="inline-flex w-full items-center justify-center rounded-xl border px-4 py-3 text-sm font-medium hover:bg-gray-50"
+        >
+          Ajukan Trophy 🏆
+        </a>
         <Link
           href="/leaderboard"
           className="inline-flex w-full items-center justify-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-50"

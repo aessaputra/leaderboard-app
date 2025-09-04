@@ -1,27 +1,19 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/db';
-import AddTrophyClient from './AddTrophyClient';
+import AddMyTrophyClient from './AddMyTrophyClient';
+import { redirect } from 'next/navigation';
 
-export default async function AdminAddTrophyPage() {
+export default async function NewMyTrophyPage() {
   const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== 'ADMIN') {
-    return <div className="p-6">Unauthorized</div>;
-  }
-
-  const approvedUsers = await prisma.user.findMany({
-    where: { approved: true },
-    select: { id: true, name: true, email: true },
-    orderBy: { name: 'asc' },
-  });
+  if (!session) redirect('/login');
 
   return (
-    <main className="mx-auto max-w-md p-6">
-      <h1 className="text-2xl font-bold">Tambah Trophy 🏆</h1>
+    <main className="mx-auto w-full max-w-md md:max-w-lg p-4 md:p-6">
+      <h1 className="text-xl md:text-2xl font-bold">Ajukan Trophy 🏆</h1>
       <p className="mt-1 text-sm text-gray-600">
-        Offline? Form ini tetap bisa dipakai — akan dikirim saat online.
+        Admin akan meninjau & menyetujui.
       </p>
-      <AddTrophyClient users={approvedUsers} />
+      <AddMyTrophyClient userId={session.user.id} />
     </main>
   );
 }

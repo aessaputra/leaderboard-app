@@ -29,11 +29,14 @@ model User {
 }
 
 model TrophyAward {
-  id          String       @id @default(cuid())
+   id          String       @id @default(cuid())
   userId      String
-  user        User         @relation(fields: [userId], references: [id])
-  competition Competition
   season      String
+  competition Competition
   createdBy   String
   createdAt   DateTime     @default(now())
+
+  approved    Boolean      @default(false)
+
+  user        User         @relation(fields: [userId], references: [id])
 }
