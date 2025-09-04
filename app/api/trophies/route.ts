@@ -4,6 +4,15 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { TrophySchema } from '@/lib/validators';
 
+function deriveSeasonFromDate(d = new Date()): string {
+  // Asumsi musim Eropa: mulai Agustus (month >= 7)
+  const year = d.getUTCFullYear();
+  const month = d.getUTCMonth(); // 0-11
+  const startYear = month >= 7 ? year : year - 1;
+  const endYear2 = String((startYear + 1) % 100).padStart(2, '0');
+  return `${startYear}/${endYear2}`;
+}
+
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== 'ADMIN') {
@@ -11,8 +20,8 @@ export async function POST(req: Request) {
   }
 
   try {
-    const data = await req.json();
-    const parsed = TrophySchema.safeParse(data);
+    const body = await req.json();
+    const parsed = TrophySchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
         { error: 'Invalid input', issues: parsed.error.issues },
@@ -20,7 +29,9 @@ export async function POST(req: Request) {
       );
     }
 
-    const { userId, competition, season } = parsed.data;
+    const { userId, competition } = parsed.data;
+    const season =
+      parsed.data.season?.toString().trim() || deriveSeasonFromDate();
 
     await prisma.trophyAward.create({
       data: {

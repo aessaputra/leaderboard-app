@@ -9,7 +9,6 @@ type LeaderboardRow = {
 };
 
 export default async function LeaderboardPage({
-  // Next 15/React 19: searchParams bisa berupa Promise
   searchParams,
 }: {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -91,7 +90,7 @@ export default async function LeaderboardPage({
                   <td className="px-3 py-2">{r.name}</td>
                   <td className="px-3 py-2 text-right">{r.ucl}</td>
                   <td className="px-3 py-2 text-right">{r.europa}</td>
-                <td className="px-3 py-2 text-right font-medium">
+                  <td className="px-3 py-2 text-right font-medium">
                     {r.total}
                   </td>
                 </tr>

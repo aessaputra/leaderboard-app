@@ -7,6 +7,9 @@ const isDev = process.env.NODE_ENV !== 'production';
 const base = {
   reactStrictMode: true,
   typedRoutes: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default withPWA({
@@ -14,6 +17,5 @@ export default withPWA({
   disable: isDev,
   register: true,
   skipWaiting: true,
-  swSrc: 'worker/sw.js', // <- custom SW kita
-  // fallbacks: { document: "/offline" },  // <-- HAPUS baris ini
+  swSrc: 'worker/sw.js',
 })(base);

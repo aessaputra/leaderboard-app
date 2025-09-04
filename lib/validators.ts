@@ -9,6 +9,7 @@ export const RegisterSchema = z.object({
 export const TrophySchema = z.object({
   userId: z.string().min(1),
   competition: z.enum(['UCL', 'EUROPA']),
+  season: z.string().min(3).optional(),
 });
 
 export const LeaderboardQuerySchema = z.object({
