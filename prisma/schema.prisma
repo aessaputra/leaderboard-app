@@ -31,7 +31,6 @@ model User {
 model TrophyAward {
    id          String       @id @default(cuid())
   userId      String
-  season      String
   competition Competition
   createdBy   String
   createdAt   DateTime     @default(now())

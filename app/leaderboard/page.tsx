@@ -2,18 +2,17 @@ import { prisma } from '@/lib/db';
 import { Card } from '@/components/ui/cta';
 import { Trophy } from 'lucide-react';
 
-type LBParams = { season?: string; competition?: 'UCL' | 'EUROPA' };
+type LBParams = { competition?: 'UCL' | 'EUROPA' };
 
 export default async function LeaderboardPage({
   searchParams,
 }: {
   searchParams: Promise<LBParams>;
 }) {
-  const { season, competition } = await searchParams;
+  const { competition } = await searchParams;
 
   const where = {
     approved: true,
-    ...(season ? { season } : {}),
     ...(competition ? { competition } : {}),
   } as const;
 
@@ -52,25 +51,18 @@ export default async function LeaderboardPage({
           Leaderboard
         </h1>
         <p className="mt-1 text-sm text-gray-300">
-          {season ? `Musim ${season}` : 'Semua musim'} •{' '}
           {competition ?? 'Semua kompetisi'}
         </p>
       </header>
 
       <Card className="mb-4 p-3">
         <form className="grid grid-cols-3 gap-2" method="get">
-          <input
-            name="season"
-            defaultValue={season ?? ''}
-            placeholder="2025/26"
-            className="col-span-2 rounded-xl border border-white/20 bg-transparent px-3 py-2 text-sm outline-none focus:ring-2"
-          />
           <select
             name="competition"
             defaultValue={competition ?? ''}
-            className="rounded-xl border border-white/20 bg-transparent px-3 py-2 text-sm outline-none focus:ring-2"
+            className="col-span-3 rounded-xl border border-white/20 bg-transparent px-3 py-2 text-sm outline-none focus:ring-2"
           >
-            <option value="">Semua</option>
+            <option value="">Semua Kompetisi</option>
             <option value="UCL">UCL</option>
             <option value="EUROPA">Europa</option>
           </select>
@@ -79,7 +71,7 @@ export default async function LeaderboardPage({
 
       {rows.length === 0 ? (
         <Card className="p-6 text-center text-sm text-gray-300">
-          Belum ada trophy disetujui untuk filter ini.
+          Belum ada trophy disetujui.
         </Card>
       ) : (
         <Card className="divide-y divide-white/10">

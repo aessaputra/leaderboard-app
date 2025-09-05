@@ -1,4 +1,3 @@
-// prisma/seed.cjs
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 const prisma = new PrismaClient();
@@ -40,11 +39,9 @@ async function main() {
     users.push(u);
   }
 
-  const season = '2025/26';
   const awards = [
     { userId: users[0].id, competition: 'UCL' },
     { userId: users[0].id, competition: 'EUROPA' },
-    { userId: users[0].id, competition: 'UCL' },
   ];
 
   for (const a of awards) {
@@ -52,14 +49,13 @@ async function main() {
       data: {
         userId: a.userId,
         competition: a.competition,
-        season,
+        approved: true,
         createdBy: admin.id,
       },
     });
   }
 
-  console.log('✅ Seed selesai: admin & 1 user + trophy dibuat.');
-  console.log('   Admin login →', adminEmail, '/ password');
+  console.log('✅ Seed selesai.');
 }
 
 main()

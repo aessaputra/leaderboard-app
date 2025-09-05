@@ -1,5 +1,13 @@
-// app/page.tsx
-import { Trophy, ListOrdered, WifiOff, User2, Sparkles } from 'lucide-react';
+import {
+  Trophy,
+  ListOrdered,
+  WifiOff,
+  User2,
+  LogIn,
+  UserPlus,
+  Sparkles,
+  Settings2,
+} from 'lucide-react';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -13,12 +21,11 @@ export default async function Home() {
     <main>
       <header className="mb-5">
         <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-          PES Trophy Leaderboard{' '}
-          <span className="inline-block align-[-2px]">⚽️</span>
+          PES Trophy Leaderboard ⚽️
         </h1>
         <p className="mt-2 text-sm text-gray-300">
           Catat piala <b>UCL</b> & <b>Europa</b>. PWA siap offline & instal
-          seperti aplikasi!
+          seperti aplikasi.
         </p>
       </header>
 
@@ -29,12 +36,14 @@ export default async function Home() {
           </div>
           <p>
             Halo, <b>{name}</b>!{' '}
-            {session?.user.approved ? (
+            {session?.user?.approved ? (
               <span className="text-emerald-300">Akun disetujui ✅</span>
-            ) : (
+            ) : session ? (
               <span className="text-yellow-300">
                 Menunggu persetujuan admin ⏳
               </span>
+            ) : (
+              <span className="text-sky-300">Silakan login/registrasi</span>
             )}
           </p>
         </div>
@@ -60,13 +69,20 @@ export default async function Home() {
           <User2 className="h-4 w-4" />
           Profil Saya
         </CTA>
-      </div>
 
-      <p className="mt-6 text-[11px] leading-relaxed text-gray-400">
-        UI <i>mobile-first</i> dengan gaya konsisten (rounded-xl, border halus,
-        glass card, shadow-sm). Nikmati PWA + cache offline{' '}
-        <Sparkles className="ml-1 inline h-3 w-3 align-[-2px]" />.
-      </p>
+        {!session && (
+          <>
+            <CTA href="/login">
+              <LogIn className="h-4 w-4" />
+              Login
+            </CTA>
+            <CTA href="/register">
+              <UserPlus className="h-4 w-4" />
+              Register
+            </CTA>
+          </>
+        )}
+      </div>
 
       {session?.user?.role === 'ADMIN' && (
         <div className="mt-6">
@@ -75,16 +91,22 @@ export default async function Home() {
               Admin
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <CTA href="/admin/trophies/requests" variant="outline">
-                Review Trophy
+              <CTA href="/admin/trophies/requests">Review Trophy</CTA>
+              <CTA href="/admin/trophies/manage">
+                <Settings2 className="h-4 w-4" />
+                Kelola Trophy
               </CTA>
-              <CTA href="/admin/users" variant="outline">
-                Approve Users
-              </CTA>
+              <CTA href="/admin/users">Approve Users</CTA>
             </div>
           </Card>
         </div>
       )}
+
+      <p className="mt-6 text-[11px] leading-relaxed text-gray-400">
+        UI mobile-first konsisten (rounded-xl, glass card, hover halus). Nikmati
+        PWA + offline cache{' '}
+        <Sparkles className="ml-1 inline h-3 w-3 align-[-2px]" />.
+      </p>
     </main>
   );
 }

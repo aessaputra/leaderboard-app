@@ -4,7 +4,6 @@ import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { Card, CTA } from '@/components/ui/cta';
-import Link from 'next/link';
 
 export default async function NewTrophyPage() {
   const session = await getServerSession(authOptions);
@@ -16,14 +15,11 @@ export default async function NewTrophyPage() {
     const s = await getServerSession(authOptions);
     if (!s) throw new Error('Unauthorized');
     if (s.user.role === 'ADMIN')
-      throw new Error('Admin dilarang menambahkan trophy sendiri');
+      throw new Error(
+        'Admin dilarang menambahkan trophy untuk dirinya sendiri'
+      );
 
-    const season = String(formData.get('season') || '').trim();
     const competition = String(formData.get('competition') || '');
-    if (!season) throw new Error('Season wajib diisi');
-    if (!/^20\d{2}\/\d{2}$/.test(season)) {
-      throw new Error('Format season: 2025/26');
-    }
     if (competition !== 'UCL' && competition !== 'EUROPA') {
       throw new Error('Kompetisi tidak valid');
     }
@@ -31,7 +27,6 @@ export default async function NewTrophyPage() {
     await prisma.trophyAward.create({
       data: {
         userId: s.user.id,
-        season,
         competition: competition as 'UCL' | 'EUROPA',
         approved: false,
         createdBy: s.user.id,
@@ -47,26 +42,12 @@ export default async function NewTrophyPage() {
       <header className="mb-4">
         <h1 className="text-xl md:text-2xl font-bold">Ajukan Trophy 🏆</h1>
         <p className="mt-1 text-sm text-gray-300">
-          Permintaanmu akan menunggu persetujuan admin.
+          Menunggu persetujuan admin.
         </p>
       </header>
 
       <Card className="p-4">
         <form action={submit} className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Musim</label>
-            <input
-              name="season"
-              placeholder="2025/26"
-              required
-              inputMode="numeric"
-              className="w-full rounded-xl border border-white/20 bg-transparent px-3 py-2 text-sm outline-none ring-emerald-400/0 focus:ring-2"
-            />
-            <p className="text-[11px] text-gray-400">
-              Contoh: <code>2025/26</code>
-            </p>
-          </div>
-
           <div className="space-y-2">
             <label className="text-sm font-medium">Kompetisi</label>
             <select
@@ -93,10 +74,6 @@ export default async function NewTrophyPage() {
           </CTA>
         </form>
       </Card>
-
-      <p className="mt-4 text-[11px] text-gray-400">
-        Admin tidak dapat menambahkan trophy untuk dirinya sendiri—fair play. ✋
-      </p>
     </main>
   );
 }
