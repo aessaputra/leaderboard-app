@@ -9,8 +9,8 @@ export default async function SiteLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-  if (!session) redirect('/login'); // wajib login
-  if (session.user.role === 'ADMIN') redirect('/admin'); // admin diarahkan ke UI admin
+  if (!session) redirect('/login');
+  if (session.user.role === 'ADMIN') redirect('/admin');
 
   return (
     <div className="min-h-dvh bg-black text-gray-100">
