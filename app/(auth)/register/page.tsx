@@ -1,0 +1,137 @@
+'use client';
+
+import { useSearchParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+
+export default function RegisterPage() {
+  const sp = useSearchParams();
+  const router = useRouter();
+  const callbackUrl = sp.get('callbackUrl') ?? '/';
+  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    const fd = new FormData(e.currentTarget);
+    const name = String(fd.get('name') ?? '');
+    const email = String(fd.get('email') ?? '');
+    const password = String(fd.get('password') ?? '');
+
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ name, email, password }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!res.ok) {
+      setLoading(false);
+      if (res.status === 409) setError('Email sudah terpakai.');
+      else setError('Gagal mendaftar. Coba lagi.');
+      return;
+    }
+
+    // auto login
+    const login = await signIn('credentials', {
+      redirect: false,
+      email,
+      password,
+      callbackUrl,
+    });
+
+    setLoading(false);
+    if (login?.ok) router.push(callbackUrl);
+    else router.push('/login?callbackUrl=' + encodeURIComponent(callbackUrl));
+  }
+
+  return (
+    <section aria-labelledby="register-title" className="w-full">
+      <div className="mx-auto w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_0_1px_1px_rgba(255,255,255,0.08)_inset,0_20px_80px_-20px_rgba(0,0,0,0.6)] backdrop-blur">
+        <div className="mb-5 text-center">
+          <div className="mx-auto mb-2 h-10 w-10 rounded-full bg-white/10 grid place-items-center">
+            🏆
+          </div>
+          <h1 id="register-title" className="text-2xl font-bold">
+            Daftar
+          </h1>
+          <p className="mt-1 text-sm text-gray-400">Buat akun baru</p>
+        </div>
+
+        <form onSubmit={onSubmit} className="space-y-3">
+          <label className="block">
+            <span className="sr-only">Nama</span>
+            <input
+              name="name"
+              required
+              placeholder="Nama"
+              className="w-full rounded-xl border border-white/15 bg-black/10 px-3 py-3 outline-none placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white"
+            />
+          </label>
+          <label className="block">
+            <span className="sr-only">Email</span>
+            <input
+              name="email"
+              type="email"
+              autoComplete="username"
+              required
+              placeholder="Email"
+              className="w-full rounded-xl border border-white/15 bg-black/10 px-3 py-3 outline-none placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white"
+            />
+          </label>
+          <label className="block">
+            <span className="sr-only">Password</span>
+            <div className="relative">
+              <input
+                name="password"
+                type={visible ? 'text' : 'password'}
+                autoComplete="new-password"
+                required
+                minLength={6}
+                placeholder="Password"
+                className="w-full rounded-xl border border-white/15 bg-black/10 px-3 py-3 pr-12 outline-none placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white"
+              />
+              <button
+                type="button"
+                aria-label={
+                  visible ? 'Sembunyikan password' : 'Tampilkan password'
+                }
+                onClick={() => setVisible((v) => !v)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg px-2 py-1 text-xs text-gray-300 hover:bg-white/10"
+              >
+                {visible ? 'Hide' : 'Show'}
+              </button>
+            </div>
+          </label>
+
+          {error && (
+            <p role="alert" className="text-sm text-red-400">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded-xl bg-white text-black px-4 py-3 text-sm font-semibold hover:bg-white/90 disabled:opacity-60"
+          >
+            {loading ? 'Memproses…' : 'Daftar'}
+          </button>
+        </form>
+
+        <p className="mt-4 text-center text-sm text-gray-400">
+          Sudah punya akun?{' '}
+          <Link
+            className="underline"
+            href={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`}
+          >
+            Masuk
+          </Link>
+        </p>
+      </div>
+    </section>
+  );
+}

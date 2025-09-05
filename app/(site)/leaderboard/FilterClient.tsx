@@ -1,0 +1,36 @@
+'use client';
+
+import { useRouter, useSearchParams } from 'next/navigation';
+
+export default function FilterClient({
+  initial,
+}: {
+  initial?: 'UCL' | 'EUROPA';
+}) {
+  const router = useRouter();
+  const sp = useSearchParams();
+  const current = initial ?? '';
+
+  return (
+    <label className="flex items-center gap-2">
+      <span className="sr-only">Pilih kompetisi</span>
+      <select
+        defaultValue={current}
+        onChange={(e) => {
+          const v = e.target.value;
+          const next = new URLSearchParams(sp.toString());
+          if (!v) next.delete('competition');
+          else next.set('competition', v);
+          router.replace(
+            next.toString() ? `/leaderboard?${next}` : '/leaderboard'
+          );
+        }}
+        className="w-full appearance-none rounded-lg border border-white/10 bg-black/60 px-3 py-2 text-sm outline-none ring-0"
+      >
+        <option value="">Semua Kompetisi</option>
+        <option value="UCL">UCL</option>
+        <option value="EUROPA">Europa</option>
+      </select>
+    </label>
+  );
+}
