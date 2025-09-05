@@ -14,7 +14,6 @@ export default async function Home() {
   const session = await getServerSession(authOptions);
   const user = session?.user;
 
-  // quick stats untuk user yang sudah login
   let counts = { ucl: 0, europa: 0, total: 0 };
   if (user) {
     const grouped = await prisma.trophyAward.groupBy({
@@ -30,62 +29,48 @@ export default async function Home() {
 
   return (
     <main className="relative mx-auto max-w-md p-5 pb-28">
-      {/* background lembut */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(900px_360px_at_50%_-120px,rgba(255,255,255,0.08),transparent)]"
       />
 
-      <header className="mt-1">
-        <h1 className="text-2xl font-bold tracking-tight">
-          PES Trophy Leaderboard <span className="align-middle">⚽️</span>
-        </h1>
-        <p className="mt-1 text-sm text-gray-400">
-          Catat piala <strong>UCL</strong> & <strong>Europa</strong>. PWA siap
-          offline & dapat di-install.
-        </p>
-      </header>
+      {/* Title only */}
+      <h1 className="mt-1 text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent text-center">
+        Trophy Leaderboard
+    </h1>
 
-      {/* Quick stats (tampil hanya saat login) */}
+      {/* Quick stats (opsional, hanya saat login) */}
       {user && (
         <section className="mt-5 grid grid-cols-3 gap-3">
-          <StatCard label="UCL" value={counts.ucl} />
-          <StatCard label="Europa" value={counts.europa} />
-          <StatCard label="Total" value={counts.total} />
+          <Stat label="UCL" value={counts.ucl} />
+          <Stat label="Europa" value={counts.europa} />
+          <Stat label="Total" value={counts.total} />
         </section>
       )}
 
       {/* Aksi utama */}
       <nav className="mt-6 space-y-3">
-        <PrimaryLink href="/trophies/new" icon={<Trophy className="h-4 w-4" />}>
+        <Primary href="/trophies/new" icon={<Trophy className="h-4 w-4" />}>
           Ajukan Trophy
-        </PrimaryLink>
-
-        <SecondaryLink
+        </Primary>
+        <Secondary
           href="/leaderboard"
           icon={<ListOrdered className="h-4 w-4" />}
         >
           Lihat Leaderboard
-        </SecondaryLink>
-
-        <SecondaryLink href="/offline" icon={<Sparkles className="h-4 w-4" />}>
+        </Secondary>
+        <Secondary href="/offline" icon={<Sparkles className="h-4 w-4" />}>
           Coba Halaman Offline
-        </SecondaryLink>
-
-        <SecondaryLink href="/me" icon={<UserRound className="h-4 w-4" />}>
+        </Secondary>
+        <Secondary href="/me" icon={<UserRound className="h-4 w-4" />}>
           Profil Saya
-        </SecondaryLink>
+        </Secondary>
       </nav>
-
-      <footer className="mt-8 text-xs text-gray-500">
-        UI mobile-first konsisten (rounded-xl, glass card, hover halus). Nikmati
-        PWA + offline cache ✨
-      </footer>
     </main>
   );
 }
 
-function StatCard({ label, value }: { label: string; value: number }) {
+function Stat({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-center shadow-sm backdrop-blur">
       <div className="text-[11px] uppercase tracking-wide text-gray-400">
@@ -96,7 +81,7 @@ function StatCard({ label, value }: { label: string; value: number }) {
   );
 }
 
-function PrimaryLink({
+function Primary({
   href,
   icon,
   children,
@@ -119,7 +104,7 @@ function PrimaryLink({
   );
 }
 
-function SecondaryLink({
+function Secondary({
   href,
   icon,
   children,

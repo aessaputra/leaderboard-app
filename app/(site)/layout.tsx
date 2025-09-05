@@ -1,7 +1,7 @@
-// app/(site)/layout.tsx
-import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
 
 export default async function SiteLayout({
   children,
@@ -9,47 +9,50 @@ export default async function SiteLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
+  if (!session) redirect('/login'); // wajib login
+  if (session.user.role === 'ADMIN') redirect('/admin'); // admin diarahkan ke UI admin
 
   return (
-    <div className="min-h-dvh flex flex-col">
-      {/* Header */}
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-black/60 backdrop-blur">
-        <div className="mx-auto flex h-12 w-full max-w-md items-center justify-between px-4">
+    <div className="min-h-dvh bg-black text-gray-100">
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-black/70 backdrop-blur">
+        <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
           <Link href="/" className="font-semibold">
-            PES Trophy ⚽️
+            PES Trophy ⚽
           </Link>
-          {session && (
-            <form action="/api/auth/signout" method="post">
-              <button className="rounded-md border px-3 py-1 text-sm">
-                Logout
-              </button>
-            </form>
-          )}
+          {/* tombol login/logout Anda */}
         </div>
       </header>
 
-      {/* Konten */}
-      <main className="mx-auto w-full max-w-md flex-1 p-4">{children}</main>
+      <main className="mx-auto max-w-3xl p-4 pb-20">{children}</main>
 
-      {/* Bottom tab hanya setelah login */}
-      {session && (
-        <nav className="sticky bottom-0 z-20 border-t border-white/10 bg-black/60 backdrop-blur">
-          <div className="mx-auto grid w-full max-w-md grid-cols-3 text-sm">
-            <Link href="/" className="py-3 text-center hover:bg-white/5">
-              Home
-            </Link>
-            <Link
-              href="/leaderboard"
-              className="py-3 text-center hover:bg-white/5"
-            >
-              Leaderboard
-            </Link>
-            <Link href="/me" className="py-3 text-center hover:bg-white/5">
-              Profil
-            </Link>
-          </div>
+      <footer className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-black/70 backdrop-blur">
+        <nav className="mx-auto grid max-w-3xl grid-cols-4 gap-2 p-3 text-sm">
+          <Link
+            href="/"
+            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center hover:bg-white/10"
+          >
+            Home
+          </Link>
+          <Link
+            href="/leaderboard"
+            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center hover:bg-white/10"
+          >
+            Leaderboard
+          </Link>
+          <Link
+            href="/trophies/new"
+            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center hover:bg-white/10"
+          >
+            Ajukan
+          </Link>
+          <Link
+            href="/me"
+            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center hover:bg-white/10"
+          >
+            Profil
+          </Link>
         </nav>
-      )}
+      </footer>
     </div>
   );
 }
