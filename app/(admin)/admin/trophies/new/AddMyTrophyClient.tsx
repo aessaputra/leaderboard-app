@@ -1,95 +1,36 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useOfflineQueue } from '@/hooks/useOfflineQueue';
+import { useState } from 'react';
 
-export default function AddMyTrophyClient({ userId }: { userId: string }) {
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const { enqueue, processQueue, attachOnlineListener } = useOfflineQueue();
-
-  useEffect(() => {
-    attachOnlineListener();
-    processQueue();
-  }, [attachOnlineListener, processQueue]);
-
-  async function submit(formData: FormData) {
-    setMessage(null);
-    setError(null);
-
-    const payload = {
-      userId,
-      competition: String(formData.get('competition')) as 'UCL' | 'EUROPA',
-      season: String(formData.get('season') || ''),
-    };
-
-    if (typeof navigator !== 'undefined' && !navigator.onLine) {
-      await enqueue({
-        url: '/api/trophies',
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: payload,
-      });
-      setMessage('📦 Tersimpan offline. Akan dikirim saat online.');
-      return;
-    }
-
-    const res = await fetch('/api/trophies', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      credentials: 'include',
-    });
-
-    if (!res.ok) {
-      const j = await res.json().catch(() => ({}));
-      setError(j?.error ?? 'Gagal kirim. Disimpan ke antrean offline.');
-      await enqueue({
-        url: '/api/trophies',
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: payload,
-      });
-      return;
-    }
-
-    const j = await res.json().catch(() => ({}));
-    setMessage(
-      j.approved
-        ? '✅ Trophy ditambahkan!'
-        : '⏳ Berhasil diajukan, menunggu persetujuan admin.'
-    );
-  }
+export default function AddMyTrophyClient({
+  onSubmit,
+}: {
+  onSubmit: (payload: { competition: 'UCL' | 'EUROPA' }) => Promise<void>;
+}) {
+  const [competition, setCompetition] = useState<'UCL' | 'EUROPA'>('UCL');
 
   return (
-    <form action={submit} className="mt-4 space-y-3">
-      <label className="block text-sm">
-        <span className="mb-1 block">Kompetisi</span>
+    <form
+      onSubmit={async (e) => {
+        e.preventDefault();
+        await onSubmit({ competition });
+      }}
+      className="space-y-3"
+    >
+      <div className="rounded-lg border p-3">
+        <label className="mb-1 block text-sm">Kompetisi</label>
         <select
-          name="competition"
-          className="w-full rounded-xl border px-3 py-2"
-          required
+          className="w-full rounded-md border bg-black/40 p-2"
+          value={competition}
+          onChange={(e) => setCompetition(e.target.value as 'UCL' | 'EUROPA')}
         >
           <option value="UCL">UCL</option>
           <option value="EUROPA">Europa</option>
         </select>
-      </label>
-
-      <label className="block text-sm">
-        <span className="mb-1 block">Musim (opsional)</span>
-        <input
-          name="season"
-          placeholder="2025/26"
-          className="w-full rounded-xl border px-3 py-2"
-        />
-      </label>
-
-      <button className="w-full rounded-xl bg-black px-3 py-2 text-white">
-        Kirim
+      </div>
+      <button className="w-full rounded-xl bg-white px-4 py-3 font-semibold text-black hover:opacity-90">
+        Ajukan
       </button>
-
-      {message && <p className="text-sm text-green-600">{message}</p>}
-      {error && <p className="text-sm text-red-600">{error}</p>}
     </form>
   );
 }

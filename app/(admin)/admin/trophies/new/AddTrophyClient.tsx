@@ -1,111 +1,57 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useOfflineQueue } from '@/hooks/useOfflineQueue';
+import { useState } from 'react';
 
-type U = { id: string; name: string; email: string };
-
-export default function AddTrophyClient({ users }: { users: U[] }) {
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const { enqueue, processQueue, attachOnlineListener } = useOfflineQueue();
-
-  useEffect(() => {
-    attachOnlineListener();
-    processQueue();
-  }, [attachOnlineListener, processQueue]);
-
-  async function submit(formData: FormData) {
-    setMessage(null);
-    setError(null);
-
-    const payload = {
-      userId: String(formData.get('userId')),
-      competition: String(formData.get('competition')) as 'UCL' | 'EUROPA',
-      season: String(formData.get('season') || '2025/26'),
-    };
-
-    if (typeof navigator !== 'undefined' && !navigator.onLine) {
-      await enqueue({
-        url: '/api/trophies',
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: payload,
-      });
-      setMessage('📦 Tersimpan offline. Akan dikirim otomatis saat online.');
-      return;
-    }
-
-    const res = await fetch('/api/trophies', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      credentials: 'include',
-    });
-
-    if (!res.ok) {
-      setError('Gagal kirim. Disimpan ke antrean offline untuk dicoba ulang.');
-      await enqueue({
-        url: '/api/trophies',
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: payload,
-      });
-      return;
-    }
-
-    setMessage('✅ Trophy ditambahkan!');
-  }
+export default function AddTrophyClient({
+  users,
+  onSubmit,
+}: {
+  users: { id: string; name: string | null; email: string }[];
+  onSubmit: (payload: {
+    competition: 'UCL' | 'EUROPA';
+    userId: string;
+  }) => Promise<void>;
+}) {
+  const [competition, setCompetition] = useState<'UCL' | 'EUROPA'>('UCL');
+  const [userId, setUserId] = useState('');
 
   return (
     <form
-      action={async (fd) => {
-        await submit(fd);
+      onSubmit={async (e) => {
+        e.preventDefault();
+        await onSubmit({ competition, userId });
       }}
-      className="mt-4 space-y-3"
+      className="space-y-3"
     >
-      <label className="block text-sm">
-        <span className="mb-1 block">Pemain</span>
+      <div className="rounded-lg border p-3">
+        <label className="mb-1 block text-sm">Kompetisi</label>
         <select
-          name="userId"
-          className="w-full rounded border px-3 py-2"
-          required
-        >
-          {users.map((u) => (
-            <option key={u.id} value={u.id}>
-              {u.name} ({u.email})
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <label className="block text-sm">
-        <span className="mb-1 block">Kompetisi</span>
-        <select
-          name="competition"
-          className="w-full rounded border px-3 py-2"
-          required
+          className="w-full rounded-md border bg-black/40 p-2"
+          value={competition}
+          onChange={(e) => setCompetition(e.target.value as 'UCL' | 'EUROPA')}
         >
           <option value="UCL">UCL</option>
           <option value="EUROPA">Europa</option>
         </select>
-      </label>
-
-      <label className="block text-sm">
-        <span className="mb-1 block">Musim</span>
-        <input
-          name="season"
-          placeholder="2025/26"
-          className="w-full rounded border px-3 py-2"
-        />
-      </label>
-
-      <button className="w-full rounded bg-black px-3 py-2 text-white">
-        Tambah Trophy
+      </div>
+      <div className="rounded-lg border p-3">
+        <label className="mb-1 block text-sm">Untuk User</label>
+        <select
+          className="w-full rounded-md border bg-black/40 p-2"
+          value={userId}
+          onChange={(e) => setUserId(e.target.value)}
+        >
+          <option value="">— pilih user —</option>
+          {users.map((u) => (
+            <option key={u.id} value={u.id}>
+              {u.name || u.email}
+            </option>
+          ))}
+        </select>
+      </div>
+      <button className="w-full rounded-xl bg-white px-4 py-3 font-semibold text-black hover:opacity-90">
+        Tambahkan
       </button>
-
-      {message && <p className="text-sm text-green-600">{message}</p>}
-      {error && <p className="text-sm text-red-600">{error}</p>}
     </form>
   );
 }

@@ -2,18 +2,27 @@
 
 import Dexie, { Table } from 'dexie';
 
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json }
+  | Json[];
+
 type QueuedRequest = {
   id?: number;
   url: string;
   method: 'POST';
   headers: Record<string, string>;
-  body: any;
+  body: Json;
   createdAt: number;
   retries: number;
 };
 
 class QueueDB extends Dexie {
   requests!: Table<QueuedRequest, number>;
+
   constructor() {
     super('pes-trophy-queue');
     this.version(1).stores({
@@ -37,6 +46,7 @@ export function useOfflineQueue() {
 
   async function processQueue() {
     const all = await db.requests.orderBy('createdAt').toArray();
+
     for (const item of all) {
       try {
         const res = await fetch(item.url, {
@@ -45,10 +55,18 @@ export function useOfflineQueue() {
           body: JSON.stringify(item.body),
           credentials: 'include',
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        await db.requests.delete(item.id!);
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+
+        if (item.id !== undefined) {
+          await db.requests.delete(item.id);
+        }
       } catch {
-        await db.requests.update(item.id!, { retries: item.retries + 1 });
+        if (item.id !== undefined) {
+          await db.requests.update(item.id, { retries: item.retries + 1 });
+        }
       }
     }
   }
@@ -56,7 +74,7 @@ export function useOfflineQueue() {
   function attachOnlineListener() {
     if (typeof window === 'undefined') return;
     window.addEventListener('online', () => {
-      processQueue();
+      void processQueue();
     });
   }
 

@@ -2,80 +2,82 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
-import { revalidatePath } from 'next/cache';
 
-export default async function NewTrophyPage() {
+export default async function AdminAddTrophyPage() {
   const session = await getServerSession(authOptions);
   if (!session) redirect('/login');
-  if (session.user.role === 'ADMIN') redirect('/admin/trophies/requests');
+  if (session.user.role !== 'ADMIN') redirect('/');
 
-  async function submit(formData: FormData) {
+  const approvedUsers = await prisma.user.findMany({
+    where: { approved: true },
+    orderBy: { name: 'asc' },
+    select: { id: true, name: true, email: true },
+  });
+
+  async function add(formData: FormData) {
     'use server';
     const s = await getServerSession(authOptions);
-    if (!s) throw new Error('Unauthorized');
-    if (s.user.role === 'ADMIN')
-      throw new Error('Admin dilarang menambahkan trophy sendiri');
+    if (!s || s.user.role !== 'ADMIN') throw new Error('Unauthorized');
 
-    const season = String(formData.get('season') || '').trim();
     const competition = String(formData.get('competition') || '');
-    if (!season) throw new Error('Season wajib diisi');
-    if (competition !== 'UCL' && competition !== 'EUROPA') {
+    const userId = String(formData.get('userId') || '');
+
+    if (!competition || !['UCL', 'EUROPA'].includes(competition)) {
       throw new Error('Kompetisi tidak valid');
     }
+    if (!userId) throw new Error('User wajib dipilih');
+
+    if (userId === s.user.id)
+      throw new Error(
+        'Admin tidak boleh menambahkan trophy untuk dirinya sendiri'
+      );
 
     await prisma.trophyAward.create({
       data: {
-        userId: s.user.id,
-        season,
         competition: competition as 'UCL' | 'EUROPA',
-        approved: false,
+        userId,
         createdBy: s.user.id,
+        approved: true,
       },
     });
 
-    revalidatePath('/me');
-    redirect('/me');
+    redirect('/admin');
   }
 
   return (
-    <main className="mx-auto w-full max-w-md p-4 md:max-w-lg md:p-6">
-      <h1 className="text-xl md:text-2xl font-bold">Ajukan Trophy 🏆</h1>
-      <p className="mt-2 text-sm text-gray-600">
-        Setelah diajukan, trophy akan menunggu persetujuan admin.
-      </p>
-
-      <form action={submit} className="mt-6 space-y-4">
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Musim (contoh: 2025/26)</label>
-          <input
-            name="season"
-            placeholder="2025/26"
-            required
-            className="w-full rounded-xl border px-3 py-2 text-sm outline-none focus:ring-2"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Kompetisi</label>
+    <main className="mx-auto max-w-md p-6">
+      <h1 className="text-2xl font-bold">Tambah Trophy (Admin)</h1>
+      <form action={add} className="mt-4 space-y-3">
+        <div className="rounded-lg border p-3">
+          <label className="mb-1 block text-sm">Kompetisi</label>
           <select
             name="competition"
+            className="w-full rounded-md border bg-black/40 p-2"
             required
-            className="w-full rounded-xl border px-3 py-2 text-sm outline-none focus:ring-2"
-            defaultValue=""
+            defaultValue="UCL"
           >
-            <option value="" disabled>
-              Pilih kompetisi
-            </option>
             <option value="UCL">UCL</option>
             <option value="EUROPA">Europa</option>
           </select>
         </div>
+        <div className="rounded-lg border p-3">
+          <label className="mb-1 block text-sm">Untuk User</label>
+          <select
+            name="userId"
+            className="w-full rounded-md border bg-black/40 p-2"
+            required
+          >
+            <option value="">— pilih user —</option>
+            {approvedUsers.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.name || u.email}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <button
-          type="submit"
-          className="w-full rounded-xl bg-black px-4 py-3 text-sm font-medium text-white"
-        >
-          Kirim Pengajuan
+        <button className="w-full rounded-xl bg-white px-4 py-3 font-semibold text-black hover:opacity-90">
+          Tambahkan
         </button>
       </form>
     </main>

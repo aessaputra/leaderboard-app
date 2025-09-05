@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/db';
-import type { NextAuthOptions, User as NAUser, Session } from 'next-auth';
+import type { NextAuthOptions, Session } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
 import type { JWT } from 'next-auth/jwt';
