@@ -1,15 +1,16 @@
-// app/layout.tsx
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
   title: 'PES Trophy Leaderboard',
-  description: 'PWA untuk catat juara UCL & Europa bareng teman-teman PES',
-  // themeColor dipindah ke viewport (Next 15)
+  description: 'PWA pencatat piala UCL & Europa bersama teman-teman.',
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0ea5e9',
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#0b0b0c' },
+    { color: '#ffffff' },
+  ],
 };
 
 export default function RootLayout({
@@ -18,9 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id">
-      <body className="min-h-dvh bg-white text-gray-900 antialiased">
-        {children}
+    <html lang="id" className="h-full">
+      <body className="min-h-full bg-[radial-gradient(1200px_600px_at_50%_-20%,#1f293780,transparent),linear-gradient(#0b0b0c,#0b0b0c)] text-gray-100 antialiased">
+        <div className="mx-auto w-full max-w-md px-4 py-6 md:max-w-lg">
+          {children}
+        </div>
       </body>
     </html>
   );

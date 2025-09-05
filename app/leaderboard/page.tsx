@@ -1,10 +1,8 @@
 import { prisma } from '@/lib/db';
+import { Card } from '@/components/ui/cta';
 import { Trophy } from 'lucide-react';
 
-type LBParams = {
-  season?: string;
-  competition?: 'UCL' | 'EUROPA';
-};
+type LBParams = { season?: string; competition?: 'UCL' | 'EUROPA' };
 
 export default async function LeaderboardPage({
   searchParams,
@@ -32,7 +30,6 @@ export default async function LeaderboardPage({
   });
   const userMap = new Map(users.map((u) => [u.id, u.name || 'User']));
 
-  // Hitung total per user
   const agg = new Map<
     string,
     { name: string; UCL: number; EUROPA: number; total: number }
@@ -45,49 +42,74 @@ export default async function LeaderboardPage({
     cur.total = cur.UCL + cur.EUROPA;
     agg.set(g.userId, cur);
   }
-
   const rows = [...agg.values()].sort((a, b) => b.total - a.total);
 
   return (
-    <main className="mx-auto w-full max-w-md p-4 md:max-w-lg md:p-6">
-      <h1 className="text-xl md:text-2xl font-bold inline-flex items-center gap-2">
-        <Trophy className="h-5 w-5" />
-        Leaderboard
-      </h1>
+    <main>
+      <header className="mb-4">
+        <h1 className="text-xl md:text-2xl font-bold inline-flex items-center gap-2">
+          <Trophy className="h-5 w-5" />
+          Leaderboard
+        </h1>
+        <p className="mt-1 text-sm text-gray-300">
+          {season ? `Musim ${season}` : 'Semua musim'} •{' '}
+          {competition ?? 'Semua kompetisi'}
+        </p>
+      </header>
 
-      <div className="mt-3 text-xs text-gray-600">
-        {season ? `Musim ${season}` : 'Semua musim'} •{' '}
-        {competition ?? 'Semua kompetisi'}
-      </div>
+      <Card className="mb-4 p-3">
+        <form className="grid grid-cols-3 gap-2" method="get">
+          <input
+            name="season"
+            defaultValue={season ?? ''}
+            placeholder="2025/26"
+            className="col-span-2 rounded-xl border border-white/20 bg-transparent px-3 py-2 text-sm outline-none focus:ring-2"
+          />
+          <select
+            name="competition"
+            defaultValue={competition ?? ''}
+            className="rounded-xl border border-white/20 bg-transparent px-3 py-2 text-sm outline-none focus:ring-2"
+          >
+            <option value="">Semua</option>
+            <option value="UCL">UCL</option>
+            <option value="EUROPA">Europa</option>
+          </select>
+        </form>
+      </Card>
 
       {rows.length === 0 ? (
-        <p className="mt-6 text-sm text-gray-600">
-          Belum ada trophy yang disetujui.
-        </p>
+        <Card className="p-6 text-center text-sm text-gray-300">
+          Belum ada trophy disetujui untuk filter ini.
+        </Card>
       ) : (
-        <ul className="mt-4 divide-y rounded-2xl border bg-white">
-          {rows.map((r, i) => (
-            <li key={r.name} className="flex items-center justify-between p-4">
-              <div className="flex items-center gap-3">
-                <span className="w-6 text-center text-sm font-semibold">
-                  {i + 1}
-                </span>
-                <div className="font-medium">{r.name}</div>
-              </div>
-              <div className="text-sm text-gray-700">
-                <span className="rounded-full border px-2 py-0.5 text-xs mr-2">
-                  UCL {r.UCL}
-                </span>
-                <span className="rounded-full border px-2 py-0.5 text-xs mr-2">
-                  Europa {r.EUROPA}
-                </span>
-                <span className="rounded-full border px-2 py-0.5 text-xs font-semibold">
-                  Total {r.total}
-                </span>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <Card className="divide-y divide-white/10">
+          <ul>
+            {rows.map((r, i) => (
+              <li
+                key={r.name}
+                className="flex items-center justify-between p-4"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-[11px] font-semibold">
+                    {i + 1}
+                  </span>
+                  <div className="font-medium">{r.name}</div>
+                </div>
+                <div className="text-xs text-gray-200">
+                  <span className="mr-2 rounded-full border border-indigo-300/30 px-2 py-0.5">
+                    UCL {r.UCL}
+                  </span>
+                  <span className="mr-2 rounded-full border border-amber-300/30 px-2 py-0.5">
+                    Europa {r.EUROPA}
+                  </span>
+                  <span className="rounded-full bg-white text-gray-900 px-2 py-0.5 font-semibold">
+                    Total {r.total}
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Card>
       )}
     </main>
   );

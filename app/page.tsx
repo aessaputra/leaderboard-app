@@ -1,136 +1,90 @@
 // app/page.tsx
+import { Trophy, ListOrdered, WifiOff, User2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import {
-  Trophy,
-  ShieldCheck,
-  Users,
-  WifiOff,
-  ListOrdered,
-  User as UserIcon,
-  LogIn,
-  UserPlus,
-} from 'lucide-react';
+import { Card, CTA } from '@/components/ui/cta';
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
-  const isAuthed = Boolean(session);
-  const isAdmin = session?.user.role === 'ADMIN';
-  const approved = session?.user.approved ?? false;
-  const displayName = session?.user.name || session?.user.email || 'Kamu';
+  const name = session?.user?.name ?? 'Teman';
 
   return (
-    <main className="mx-auto w-full max-w-md md:max-w-lg p-4 md:p-6">
-      <header>
-        <h1 className="text-xl md:text-2xl font-bold">
-          PES Trophy Leaderboard ⚽️
+    <main>
+      <header className="mb-5">
+        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+          PES Trophy Leaderboard{' '}
+          <span className="inline-block align-[-2px]">⚽️</span>
         </h1>
-        <p className="mt-1 text-sm text-gray-600">
-          Catat piala UCL & Europa. Install sebagai aplikasi (PWA) dan tetap
-          bisa lihat leaderboard saat offline.
+        <p className="mt-2 text-sm text-gray-300">
+          Catat piala <b>UCL</b> & <b>Europa</b>. PWA siap offline & instal
+          seperti aplikasi!
         </p>
       </header>
 
-      {/* Banner status akun */}
-      {isAuthed ? (
-        <section className="mt-4 rounded-2xl border bg-white p-4 shadow-sm">
-          <div className="text-sm">
-            <span className="font-semibold">Halo, {displayName}!</span>{' '}
-            {!approved ? (
-              <span className="text-amber-700">
-                Akun kamu sedang menunggu persetujuan admin. Beberapa fitur
-                dibatasi.
-              </span>
-            ) : (
-              <span className="text-green-700">Akun sudah disetujui ✅</span>
-            )}
+      <Card className="p-3">
+        <div className="flex items-center gap-2 text-sm text-gray-100">
+          <div className="inline-flex h-7 min-w-7 items-center justify-center rounded-full bg-white/10 px-2 font-semibold">
+            {name[0]?.toUpperCase() ?? 'U'}
           </div>
-        </section>
-      ) : (
-        <section className="mt-4 grid grid-cols-1 gap-3">
-          <Link
-            href="/login"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100"
-          >
-            <LogIn className="h-4 w-4" />
-            Login
-          </Link>
-          <Link
-            href="/register"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100"
-          >
-            <UserPlus className="h-4 w-4" />
-            Daftar
-          </Link>
-        </section>
-      )}
+          <p>
+            Halo, <b>{name}</b>!{' '}
+            {session?.user.approved ? (
+              <span className="text-emerald-300">Akun disetujui ✅</span>
+            ) : (
+              <span className="text-yellow-300">
+                Menunggu persetujuan admin ⏳
+              </span>
+            )}
+          </p>
+        </div>
+      </Card>
 
-      {/* Aksi utama (mobile-first buttons) */}
-      <nav className="mt-6 grid grid-cols-1 gap-3">
-        {/* User ajukan trophy */}
-        {isAuthed && (
-          <Link
-            href="/trophies/new"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100"
-          >
-            <Trophy className="h-4 w-4" />
-            Ajukan Trophy
-          </Link>
-        )}
+      <div className="mt-5 space-y-3">
+        <CTA href="/trophies/new" variant="primary">
+          <Trophy className="h-4 w-4" />
+          Ajukan Trophy
+        </CTA>
 
-        {/* Leaderboard & Offline */}
-        <Link
-          href="/leaderboard"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100"
-        >
+        <CTA href="/leaderboard">
           <ListOrdered className="h-4 w-4" />
           Lihat Leaderboard
-        </Link>
-        <Link
-          href="/offline"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100"
-        >
+        </CTA>
+
+        <CTA href="/offline">
           <WifiOff className="h-4 w-4" />
           Coba Halaman Offline
-        </Link>
+        </CTA>
 
-        {/* Menu Admin (hanya untuk ADMIN) */}
-        {isAdmin && (
-          <>
-            <Link
-              href="/admin/trophies/requests"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100"
-            >
-              <ShieldCheck className="h-4 w-4" />
-              Admin: Permintaan Trophy
-            </Link>
-            <Link
-              href="/admin/users"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100"
-            >
-              <Users className="h-4 w-4" />
-              Admin: Approve Users
-            </Link>
-          </>
-        )}
+        <CTA href="/me">
+          <User2 className="h-4 w-4" />
+          Profil Saya
+        </CTA>
+      </div>
 
-        {/* Profil */}
-        {isAuthed && (
-          <Link
-            href="/me"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100"
-          >
-            <UserIcon className="h-4 w-4" />
-            Profil Saya
-          </Link>
-        )}
-      </nav>
+      <p className="mt-6 text-[11px] leading-relaxed text-gray-400">
+        UI <i>mobile-first</i> dengan gaya konsisten (rounded-xl, border halus,
+        glass card, shadow-sm). Nikmati PWA + cache offline{' '}
+        <Sparkles className="ml-1 inline h-3 w-3 align-[-2px]" />.
+      </p>
 
-      <footer className="mt-6 text-xs text-gray-500">
-        UI mobile-first dengan gaya konsisten (rounded-xl, border halus, card
-        putih, shadow-sm). Nikmati PWA + offline cache ✨
-      </footer>
+      {session?.user?.role === 'ADMIN' && (
+        <div className="mt-6">
+          <Card className="p-3">
+            <div className="mb-2 text-xs uppercase tracking-wide text-gray-400">
+              Admin
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <CTA href="/admin/trophies/requests" variant="outline">
+                Review Trophy
+              </CTA>
+              <CTA href="/admin/users" variant="outline">
+                Approve Users
+              </CTA>
+            </div>
+          </Card>
+        </div>
+      )}
     </main>
   );
 }

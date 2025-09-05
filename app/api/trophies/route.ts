@@ -32,7 +32,6 @@ export async function POST(req: Request) {
     const season = parsed.data.season?.trim() || deriveSeasonFromDate();
     const isAdmin = session.user.role === 'ADMIN';
 
-    // ❌ Admin dilarang membuat trophy untuk dirinya sendiri
     if (isAdmin && userId === session.user.id) {
       return NextResponse.json(
         {
@@ -42,7 +41,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const approved = isAdmin; // user biasa -> pending; admin -> langsung approve
+    const approved = isAdmin;
     await prisma.trophyAward.create({
       data: {
         userId,
