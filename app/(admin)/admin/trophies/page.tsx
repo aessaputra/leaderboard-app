@@ -1,4 +1,4 @@
-// app/(site)/admin/trophies/page.tsx
+// app/(admin)/admin/trophies/page.tsx
 export const runtime = 'nodejs';
 
 import Link from 'next/link';
@@ -8,23 +8,18 @@ import { createTrophy, updateTrophy, deleteTrophy } from './actions';
 type Competition = 'UCL' | 'EUROPA';
 
 export default async function AdminTrophiesPage() {
-  // data users untuk form create
   const users = await prisma.user.findMany({
     orderBy: { name: 'asc' },
     select: { id: true, name: true, email: true },
   });
 
-  // daftar trophy (include user jika relasi ada)
   const trophies = await prisma.trophyAward.findMany({
     orderBy: { createdAt: 'desc' },
-    include: {
-      user: { select: { id: true, name: true, email: true } },
-    },
+    include: { user: { select: { id: true, name: true, email: true } } },
   });
 
   return (
     <div className="mx-auto max-w-6xl p-4 space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Kelola Trophy (CRUD)</h1>
         <Link
@@ -35,7 +30,7 @@ export default async function AdminTrophiesPage() {
         </Link>
       </div>
 
-      {/* Form Create */}
+      {/* Create */}
       <div className="rounded-2xl border border-white/10 bg-neutral-900/60 p-4 space-y-4">
         <div className="text-lg font-semibold">Tambah Trophy</div>
         <form action={createTrophy} className="grid gap-3 sm:grid-cols-4">
@@ -45,8 +40,11 @@ export default async function AdminTrophiesPage() {
               name="userId"
               required
               className="w-full rounded-lg border border-white/10 bg-transparent p-2"
+              defaultValue=""
             >
-              <option value="">-- pilih user --</option>
+              <option value="" disabled>
+                -- pilih user --
+              </option>
               {users.map((u) => (
                 <option key={u.id} value={u.id}>
                   {u.name ?? u.email ?? u.id}
@@ -92,7 +90,7 @@ export default async function AdminTrophiesPage() {
         </form>
       </div>
 
-      {/* Tabel List & Inline Update */}
+      {/* List + Inline Update */}
       <div className="rounded-2xl border border-white/10 bg-neutral-900/60 p-4">
         <div className="text-lg font-semibold mb-3">Daftar Trophy</div>
 
@@ -102,8 +100,7 @@ export default async function AdminTrophiesPage() {
               <tr>
                 <th className="px-2 py-2">ID</th>
                 <th className="px-2 py-2">User</th>
-                <th className="px-2 py-2">Competition</th>
-                <th className="px-2 py-2">Approved</th>
+                <th className="px-2 py-2">Competition &amp; Approved</th>
                 <th className="px-2 py-2">Created</th>
                 <th className="px-2 py-2">Aksi</th>
               </tr>
@@ -122,10 +119,9 @@ export default async function AdminTrophiesPage() {
                     <td className="px-2 py-2 align-top">{t.id}</td>
                     <td className="px-2 py-2 align-top">{userLabel}</td>
                     <td className="px-2 py-2 align-top">
-                      {/* Inline update form */}
                       <form
                         action={updateTrophy}
-                        className="flex items-center gap-2"
+                        className="flex flex-wrap items-center gap-2"
                       >
                         <input type="hidden" name="id" value={t.id} />
                         <select
@@ -154,17 +150,6 @@ export default async function AdminTrophiesPage() {
                         </button>
                       </form>
                     </td>
-                    <td className="px-2 py-2 align-top">
-                      {t.approved ? (
-                        <span className="rounded bg-emerald-600/30 px-2 py-0.5 text-emerald-300">
-                          Ya
-                        </span>
-                      ) : (
-                        <span className="rounded bg-yellow-600/30 px-2 py-0.5 text-yellow-300">
-                          Belum
-                        </span>
-                      )}
-                    </td>
                     <td className="px-2 py-2 align-top">{created}</td>
                     <td className="px-2 py-2 align-top">
                       <form action={deleteTrophy}>
@@ -185,7 +170,7 @@ export default async function AdminTrophiesPage() {
               {trophies.length === 0 && (
                 <tr>
                   <td
-                    colSpan={6}
+                    colSpan={5}
                     className="px-2 py-6 text-center text-gray-400"
                   >
                     Belum ada trophy.
