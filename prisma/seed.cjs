@@ -1,26 +1,26 @@
-const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcrypt');
+const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 
 async function main() {
-  const adminEmail = 'admin@gmail.com';
-  const adminPass = await bcrypt.hash('password', 10);
+  const adminEmail = "admin@gmail.com";
+  const adminPass = await bcrypt.hash("password", 10);
 
   const admin = await prisma.user.upsert({
     where: { email: adminEmail },
     update: {},
     create: {
-      name: 'Admin',
+      name: "Admin",
       email: adminEmail,
       password: adminPass,
-      role: 'ADMIN',
+      role: "ADMIN",
       approved: true,
     },
   });
 
-  const usersData = [{ name: 'Aes Saputra', email: 'aessaputra@yahoo.com' }];
+  const usersData = [{ name: "Aes Saputra", email: "aessaputra@yahoo.com" }];
   const hashes = await Promise.all(
-    usersData.map(() => bcrypt.hash('password', 10))
+    usersData.map(() => bcrypt.hash("password", 10))
   );
 
   const users = [];
@@ -32,7 +32,7 @@ async function main() {
         name: usersData[i].name,
         email: usersData[i].email,
         password: hashes[i],
-        role: 'USER',
+        role: "USER",
         approved: true,
       },
     });
@@ -40,8 +40,8 @@ async function main() {
   }
 
   const awards = [
-    { userId: users[0].id, competition: 'UCL' },
-    { userId: users[0].id, competition: 'EUROPA' },
+    { userId: users[0].id, competition: "UCL" },
+    { userId: users[0].id, competition: "EUROPA" },
   ];
 
   for (const a of awards) {
@@ -55,7 +55,7 @@ async function main() {
     });
   }
 
-  console.log('✅ Seed selesai.');
+  console.log("✅ Seed selesai.");
 }
 
 main()

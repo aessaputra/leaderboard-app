@@ -44,3 +44,43 @@ pnpm db:seed      # seed database
 ## Notes
 
 - `next.config.mjs` is the single source of Next config. `typedRoutes` is disabled to reduce friction with strict typed `Link` routes. Re-enable once all links are typed.
+
+## Local Setup (no Docker)
+
+- Env: create/update `.env.local` with `DATABASE_URL` (Neon recommended) and `NEXTAUTH_SECRET`.
+- Install: `pnpm install`
+- Generate Prisma client: `pnpm prisma generate`
+- Apply migrations: `pnpm prisma migrate deploy`
+- (Optional) Seed: `pnpm db:seed`
+- Run dev server: `pnpm dev`
+
+Notes:
+- For Neon, use the pooled host (`-pooler`) and append `?sslmode=require`.
+- When you change the Prisma schema during development, use `pnpm prisma migrate dev` to create new migrations.
+
+## Production (no Docker)
+
+Run the app without containers:
+
+1. Install prerequisites: Node.js 18+ and PostgreSQL 14+.
+2. Create a database (example name: `pes_trophy`).
+3. Set environment variables (e.g. in your process manager):
+   - `DATABASE_URL` (Neon example): `postgresql://USER:PASSWORD@ep-xxx-pooler.REGION.aws.neon.tech/DB_NAME?sslmode=require`
+   - `NEXTAUTH_URL=https://your-domain`
+   - `NEXTAUTH_SECRET=generate-a-strong-secret`
+4. Install deps and build:
+   - `pnpm install`
+   - `pnpm build`
+5. Apply migrations and start:
+   - `pnpm prisma migrate deploy`
+   - `pnpm start`
+
+Optional: create a `systemd` service or use a process manager like PM2 to keep the app running.
+
+### Using Neon
+
+- Use the pooled connection host (contains `-pooler`) and append `?sslmode=require`.
+- After updating `DATABASE_URL`, run:
+  - `pnpm prisma generate`
+  - `pnpm prisma migrate deploy`
+  - `pnpm start`
