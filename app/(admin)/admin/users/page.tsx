@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import LogoutButton from '@/components/auth/LogoutButton';
+import BackButton from '@/components/BackButton';
 
 export default async function AdminUsersPage() {
   const session = await getServerSession(authOptions);
@@ -35,7 +36,10 @@ export default async function AdminUsersPage() {
   return (
     <main className="mx-auto max-w-4xl p-4">
       <header className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Approve Users</h1>
+        <div className="flex items-center gap-3">
+          <BackButton fallback="/admin" />
+          <h1 className="text-2xl font-semibold">Approve Users</h1>
+        </div>
         <LogoutButton label="Logout (ganti akun)" />
       </header>
 

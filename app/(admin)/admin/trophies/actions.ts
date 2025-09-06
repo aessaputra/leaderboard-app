@@ -2,12 +2,13 @@
 
 import { prisma } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
-import { auth } from '@/lib/auth';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 type Competition = 'UCL' | 'EUROPA';
 
 export async function createTrophy(formData: FormData) {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   const adminId = session?.user?.id;
   if (!adminId) throw new Error('Unauthorized');
 
@@ -17,6 +18,9 @@ export async function createTrophy(formData: FormData) {
 
   if (!userId || !competition) {
     throw new Error('userId dan competition wajib diisi');
+  }
+  if (userId === adminId) {
+    throw new Error('Admin tidak boleh menambahkan trophy untuk dirinya sendiri');
   }
 
   await prisma.trophyAward.create({
@@ -37,7 +41,7 @@ export async function adjustTrophyCount(
   competition: Competition,
   delta: number
 ) {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   const adminId = session?.user?.id;
   if (!adminId) throw new Error('Unauthorized');
 
@@ -69,9 +73,36 @@ export async function adjustTrophyCount(
   revalidatePath('/leaderboard');
 }
 
-export async function deleteTrophy(id: string) {
-  const session = await auth();
+export async function updateTrophy(formData: FormData) {
+  'use server';
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== 'ADMIN')
+    throw new Error('Unauthorized');
+
+  const id = String(formData.get('id') ?? '');
+  const competition = String(formData.get('competition') ?? '') as Competition;
+  const approved = formData.get('approved') === 'on';
+
+  if (!id) throw new Error('ID wajib diisi');
+  if (competition !== 'UCL' && competition !== 'EUROPA') {
+    throw new Error('Competition tidak valid');
+  }
+
+  await prisma.trophyAward.update({
+    where: { id },
+    data: { competition, approved },
+  });
+
+  revalidatePath('/admin/trophies');
+  revalidatePath('/leaderboard');
+}
+
+export async function deleteTrophy(formData: FormData) {
+  const session = await getServerSession(authOptions);
   if (!session?.user?.id) throw new Error('Unauthorized');
+
+  const id = String(formData.get('id') ?? '');
+  if (!id) throw new Error('ID wajib diisi');
 
   await prisma.trophyAward.delete({ where: { id } });
   revalidatePath('/admin/trophies');

@@ -9,7 +9,7 @@ export default async function AdminAddTrophyPage() {
   if (session.user.role !== 'ADMIN') redirect('/');
 
   const approvedUsers = await prisma.user.findMany({
-    where: { approved: true },
+    where: { approved: true, NOT: { id: session.user.id } },
     orderBy: { name: 'asc' },
     select: { id: true, name: true, email: true },
   });
@@ -74,6 +74,9 @@ export default async function AdminAddTrophyPage() {
               </option>
             ))}
           </select>
+          <p className="mt-1 text-xs text-gray-400">
+            Catatan: Admin tidak dapat menambahkan trophy untuk dirinya sendiri.
+          </p>
         </div>
 
         <button className="w-full rounded-xl bg-white px-4 py-3 font-semibold text-black hover:opacity-90">

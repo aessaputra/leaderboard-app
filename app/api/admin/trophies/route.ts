@@ -2,6 +2,8 @@ export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 type Competition = 'UCL' | 'EUROPA';
 function isCompetition(x: unknown): x is Competition {
@@ -62,6 +64,10 @@ interface CreatePayload {
   approved?: boolean;
 }
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== 'ADMIN') {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const body = (await req.json()) as unknown;
   if (
     typeof body !== 'object' ||
@@ -75,7 +81,7 @@ export async function POST(req: Request) {
   const { userId, competition, approved = false } = body as CreatePayload;
 
   const created = await prisma.trophyAward.create({
-    data: { userId, competition, approved },
+    data: { userId, competition, approved, createdBy: session.user.id },
     include: { user: { select: { name: true } } },
   });
 

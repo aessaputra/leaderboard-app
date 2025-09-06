@@ -4,11 +4,17 @@ export const runtime = 'nodejs';
 import Link from 'next/link';
 import { prisma } from '@/lib/db';
 import { createTrophy, updateTrophy, deleteTrophy } from './actions';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 type Competition = 'UCL' | 'EUROPA';
 
 export default async function AdminTrophiesPage() {
+  const session = await getServerSession(authOptions);
+  const adminId = session?.user?.id ?? '';
+
   const users = await prisma.user.findMany({
+    where: adminId ? { NOT: { id: adminId } } : undefined,
     orderBy: { name: 'asc' },
     select: { id: true, name: true, email: true },
   });
