@@ -21,4 +21,6 @@ export default withPWA({
   register: true,
   skipWaiting: true,
   swSrc: 'worker/sw.js',
+  // Ensure offline page is precached for navigation fallback
+  additionalManifestEntries: [{ url: '/offline', revision: null }],
 })(base);

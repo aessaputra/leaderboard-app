@@ -8,6 +8,7 @@ const PUBLIC_PATHS = new Set([
   '/register',
   '/offline',
   '/manifest.webmanifest',
+  '/manifest.json',
   '/favicon.ico',
   '/robots.txt',
   '/sitemap.xml',

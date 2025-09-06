@@ -1,6 +1,6 @@
 import './globals.css';
 
-export const metadata = { title: 'PES Trophy' };
+export const metadata = { title: 'PES Trophy', manifest: '/manifest.json' };
 
 export default function RootLayout({
   children,

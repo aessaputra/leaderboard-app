@@ -47,7 +47,7 @@ pnpm db:seed      # seed database
 
 ## Local Setup (no Docker)
 
-- Env: create/update `.env.local` with `DATABASE_URL` (Neon recommended) and `NEXTAUTH_SECRET`.
+- Env: update both `.env` (Prisma reads this) and `.env.local` (Next.js reads this) with the same `DATABASE_URL` (Neon recommended) and `NEXTAUTH_SECRET`.
 - Install: `pnpm install`
 - Generate Prisma client: `pnpm prisma generate`
 - Apply migrations: `pnpm prisma migrate deploy`
@@ -55,6 +55,7 @@ pnpm db:seed      # seed database
 - Run dev server: `pnpm dev`
 
 Notes:
+- Prisma loads env from `.env` (or `prisma/.env`); ensure your Neon URL is set there. Next.js uses `.env.local` at runtime — keep them in sync.
 - For Neon, use the pooled host (`-pooler`) and append `?sslmode=require`.
 - When you change the Prisma schema during development, use `pnpm prisma migrate dev` to create new migrations.
 
