@@ -16,11 +16,13 @@ function parseBool(x: string | null): boolean | undefined {
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const page = Math.max(Number(searchParams.get('page') ?? 1), 1);
-  const pageSize = Math.min(
-    Math.max(Number(searchParams.get('pageSize') ?? 20), 1),
-    100
-  );
+  const pageParam = Number(searchParams.get('page'));
+  const page = pageParam > 0 ? Math.floor(pageParam) : 1;
+
+  const pageSizeParam = Number(searchParams.get('pageSize'));
+  const pageSize = pageSizeParam > 0
+    ? Math.min(Math.floor(pageSizeParam), 100)
+    : 20;
   const userId = searchParams.get('userId') ?? undefined;
   const comp = searchParams.get('competition');
   const approved = parseBool(searchParams.get('approved'));
