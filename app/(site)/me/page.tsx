@@ -3,6 +3,7 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
 import { LogOut, CheckCheck, Hourglass } from 'lucide-react';
+import LogoutButton from '@/components/auth/LogoutButton';
 
 export default async function MePage() {
   const session = await getServerSession(authOptions);
@@ -54,12 +55,7 @@ export default async function MePage() {
           </div>
         </div>
 
-        <form action="/api/auth/signout" method="post">
-          <button className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm hover:bg-white/10">
-            <LogOut className="h-4 w-4" />
-            Logout
-          </button>
-        </form>
+        <LogoutButton label="Logout" />
       </header>
 
       {/* statistik singkat */}

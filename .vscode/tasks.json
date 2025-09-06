@@ -1,0 +1,42 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vscode/master/extensions/github-vscode-theme/src/theme-schema.json",
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dev",
+      "type": "npm",
+      "script": "dev",
+      "problemMatcher": []
+    },
+    {
+      "label": "lint",
+      "type": "npm",
+      "script": "lint",
+      "problemMatcher": ["$eslint-stylish"]
+    },
+    {
+      "label": "lint:fix",
+      "type": "npm",
+      "script": "lint:fix",
+      "problemMatcher": ["$eslint-stylish"]
+    },
+    {
+      "label": "typecheck",
+      "type": "npm",
+      "script": "typecheck",
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "db:generate",
+      "type": "npm",
+      "script": "postinstall",
+      "detail": "Prisma generate"
+    },
+    {
+      "label": "db:seed",
+      "type": "npm",
+      "script": "db:seed"
+    }
+  ]
+}
+

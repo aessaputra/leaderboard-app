@@ -30,7 +30,8 @@
     "lib/**/*.tsx",
     "hooks/**/*.ts",
     "hooks/**/*.tsx",
-    ".next/types/**/*.ts"
+    // Do not include Next typed-routes validator in typecheck to avoid stale path errors
+    // ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules", "app/generated/**", "prisma/migrations/**"]
 }

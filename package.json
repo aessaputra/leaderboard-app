@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start -p 3000",
     "lint": "next lint --max-warnings=0 --dir app --dir components --dir lib --dir hooks",
+    "lint:fix": "next lint --fix --max-warnings=0 --dir app --dir components --dir lib --dir hooks",
+    "check": "pnpm lint && pnpm typecheck",
     "typecheck": "tsc --noEmit",
     "db:seed": "prisma db seed",
     "postinstall": "prisma generate"

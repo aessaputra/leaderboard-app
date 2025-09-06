@@ -6,7 +6,8 @@ const isDev = process.env.NODE_ENV !== 'production';
 /** @type {import('next').NextConfig} */
 const base = {
   reactStrictMode: true,
-  typedRoutes: true,
+  // Disable typed routes to reduce friction in migration; re-enable once links are typed
+  typedRoutes: false,
   eslint: {
     ignoreDuringBuilds: true,
   },

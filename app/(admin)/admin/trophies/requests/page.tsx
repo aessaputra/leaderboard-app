@@ -3,7 +3,6 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-// Logout dipindah ke header layout admin; BackButton dihilangkan (ada nav di footer)
 import { Clock, Check, X } from 'lucide-react';
 
 export default async function RequestsPage() {
@@ -74,7 +73,9 @@ export default async function RequestsPage() {
                   <div className="truncate text-base font-medium">
                     {t.user?.name ?? '(Tanpa nama)'}
                   </div>
-                  <div className="truncate text-xs text-gray-400">{t.user?.email}</div>
+                  <div className="truncate text-xs text-gray-400">
+                    {t.user?.email}
+                  </div>
                   <div className="mt-1 flex items-center gap-2 text-sm">
                     <span className="rounded border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-semibold">
                       {t.competition}
