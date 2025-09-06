@@ -75,8 +75,8 @@ export default async function AdminDashboardPage() {
         </Link>
       </section>
 
-      {/* Quick actions */}
-      <section className="grid gap-4 sm:grid-cols-2">
+      {/* Quick actions (mobile-first single column) */}
+      <section className="grid gap-4">
         <Link
           href="/admin/trophies"
           className="rounded-xl border border-white/10 bg-neutral-900/60 p-4 hover:bg-neutral-900/80"
@@ -86,18 +86,6 @@ export default async function AdminDashboardPage() {
           </div>
           <div className="text-sm text-gray-400">
             Tambah, edit, dan hapus trophy milik user.
-          </div>
-        </Link>
-
-        <Link
-          href="/admin/trophies/new"
-          className="rounded-xl border border-white/10 bg-neutral-900/60 p-4 hover:bg-neutral-900/80"
-        >
-          <div className="flex items-center gap-2 text-lg font-semibold">
-            <ShieldCheck className="h-5 w-5" /> Tambah Trophy (Admin)
-          </div>
-          <div className="text-sm text-gray-400">
-            Admin menambah trophy untuk user lain (langsung approved).
           </div>
         </Link>
       </section>
@@ -135,14 +123,7 @@ export default async function AdminDashboardPage() {
         )}
       </section>
 
-      <div className="text-right">
-        <Link
-          href="/"
-          className="inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm hover:bg-white/10"
-        >
-          ← Kembali ke Situs
-        </Link>
-      </div>
+      {/* Kembali ke situs dihapus sesuai permintaan */}
     </div>
   );
 }

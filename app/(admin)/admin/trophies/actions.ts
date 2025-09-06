@@ -44,6 +44,9 @@ export async function adjustTrophyCount(
   const session = await getServerSession(authOptions);
   const adminId = session?.user?.id;
   if (!adminId) throw new Error('Unauthorized');
+  if (userId === adminId) {
+    throw new Error('Admin tidak boleh menambahkan trophy untuk dirinya sendiri');
+  }
 
   if (delta > 0) {
     await prisma.trophyAward.createMany({

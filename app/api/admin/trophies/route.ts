@@ -80,6 +80,13 @@ export async function POST(req: Request) {
 
   const { userId, competition, approved = false } = body as CreatePayload;
 
+  if (userId === session.user.id) {
+    return NextResponse.json(
+      { error: 'Admin tidak boleh menambahkan trophy untuk dirinya sendiri' },
+      { status: 403 }
+    );
+  }
+
   const created = await prisma.trophyAward.create({
     data: { userId, competition, approved, createdBy: session.user.id },
     include: { user: { select: { name: true } } },

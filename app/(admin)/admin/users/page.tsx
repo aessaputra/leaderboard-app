@@ -3,8 +3,8 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import LogoutButton from '@/components/auth/LogoutButton';
-import BackButton from '@/components/BackButton';
+// Logout dipindah ke header layout admin; BackButton dihilangkan (ada nav di footer)
+import { UserPlus, Mail, Clock, Check } from 'lucide-react';
 
 export default async function AdminUsersPage() {
   const session = await getServerSession(authOptions);
@@ -34,40 +34,57 @@ export default async function AdminUsersPage() {
   }
 
   return (
-    <main className="mx-auto max-w-4xl p-4">
-      <header className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <BackButton fallback="/admin" />
-          <h1 className="text-2xl font-semibold">Approve Users</h1>
-        </div>
-        <LogoutButton label="Logout (ganti akun)" />
+    <main className="mx-auto w-full max-w-md px-3 py-6 sm:max-w-4xl sm:px-4 sm:py-8">
+      <header className="mb-5 sm:mb-6">
+        <h1 className="text-xl font-semibold sm:text-2xl">Approve Users</h1>
       </header>
 
       {pending.length === 0 ? (
-        <p className="text-sm text-gray-400">Tidak ada user pending.</p>
+        <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-gray-400">
+          Tidak ada user pending.
+        </div>
       ) : (
-        <ul className="space-y-3">
-          {pending.map((u) => (
-            <li
-              key={u.id}
-              className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3"
-            >
-              <div>
-                <div className="font-medium">{u.name ?? '(Tanpa nama)'}</div>
-                <div className="text-sm text-gray-400">{u.email}</div>
-                <div className="text-xs text-gray-500">
-                  Daftar: {new Date(u.createdAt).toLocaleString()}
+        <>
+          <div className="mb-3 text-sm text-gray-400">
+            <span className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5">
+              <UserPlus className="h-4 w-4" /> {pending.length} user menunggu persetujuan
+            </span>
+          </div>
+          <ul className="space-y-3">
+            {pending.map((u) => (
+              <li
+                key={u.id}
+                className="rounded-xl border border-white/10 bg-white/5 p-3 sm:p-4"
+              >
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <div className="truncate text-base font-medium">
+                      {u.name ?? '(Tanpa nama)'}
+                    </div>
+                    <div className="mt-0.5 flex items-center gap-2 text-xs text-gray-400">
+                      <Mail className="h-3.5 w-3.5" />
+                      <span className="truncate">{u.email}</span>
+                    </div>
+                    <div className="mt-1 flex items-center gap-1 text-[11px] text-gray-500">
+                      <Clock className="h-3.5 w-3.5" />
+                      Daftar: {new Date(u.createdAt).toLocaleString()}
+                    </div>
+                  </div>
+
+                  <form action={approveUser} className="sm:ml-3">
+                    <input type="hidden" name="id" value={u.id} />
+                    <button
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-sm font-medium text-emerald-200 hover:bg-emerald-500/25 sm:w-auto"
+                      aria-label={`Approve ${u.email}`}
+                    >
+                      <Check className="h-4 w-4" /> Approve
+                    </button>
+                  </form>
                 </div>
-              </div>
-              <form action={approveUser}>
-                <input type="hidden" name="id" value={u.id} />
-                <button className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-sm font-medium text-emerald-300 hover:bg-emerald-500/20">
-                  Approve
-                </button>
-              </form>
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </main>
   );

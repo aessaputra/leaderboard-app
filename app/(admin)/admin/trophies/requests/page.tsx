@@ -3,8 +3,8 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import LogoutButton from '@/components/auth/LogoutButton';
-import BackButton from '@/components/BackButton';
+// Logout dipindah ke header layout admin; BackButton dihilangkan (ada nav di footer)
+import { Clock, Check, X } from 'lucide-react';
 
 export default async function RequestsPage() {
   const session = await getServerSession(authOptions);
@@ -52,53 +52,64 @@ export default async function RequestsPage() {
   }
 
   return (
-    <main className="mx-auto max-w-4xl p-4">
-      <header className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <BackButton fallback="/admin" />
-          <h1 className="text-2xl font-semibold">Trophy Requests</h1>
-        </div>
-        <LogoutButton label="Logout (ganti akun)" />
+    <main className="mx-auto w-full max-w-md px-3 py-6 sm:max-w-4xl sm:px-4 sm:py-8">
+      <header className="mb-5 sm:mb-6">
+        <h1 className="text-xl font-semibold sm:text-2xl">Trophy Requests</h1>
       </header>
 
       {pending.length === 0 ? (
-        <p className="text-sm text-gray-400">
+        <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-gray-400">
           Tidak ada pengajuan trophy yang menunggu persetujuan.
-        </p>
+        </div>
       ) : (
         <ul className="space-y-3">
           {pending.map((t) => (
             <li
               key={t.id}
-              className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3"
+              className="rounded-xl border border-white/10 bg-white/5 p-3 sm:p-4"
             >
-              <div className="min-w-0">
-                <div className="font-medium">
-                  {t.user?.name ?? '(Tanpa nama)'}
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                {/* Left: info */}
+                <div className="min-w-0">
+                  <div className="truncate text-base font-medium">
+                    {t.user?.name ?? '(Tanpa nama)'}
+                  </div>
+                  <div className="truncate text-xs text-gray-400">{t.user?.email}</div>
+                  <div className="mt-1 flex items-center gap-2 text-sm">
+                    <span className="rounded border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-semibold">
+                      {t.competition}
+                    </span>
+                    <span className="flex items-center gap-1 text-xs text-gray-400">
+                      <Clock className="h-3.5 w-3.5" />
+                      {new Date(t.createdAt).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="mt-1 text-[11px] text-gray-500">
+                    Dibuat oleh: {t.createdBy}
+                  </div>
                 </div>
-                <div className="text-xs text-gray-400">{t.user?.email}</div>
-                <div className="mt-1 text-sm">
-                  Ajukan: <span className="font-semibold">{t.competition}</span>
-                </div>
-                <div className="text-xs text-gray-500">
-                  Dibuat: {new Date(t.createdAt).toLocaleString()} • Dibuat
-                  oleh: {t.createdBy}
-                </div>
-              </div>
 
-              <div className="ml-3 flex shrink-0 items-center gap-2">
-                <form action={approve}>
-                  <input type="hidden" name="id" value={t.id} />
-                  <button className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-sm font-medium text-emerald-300 hover:bg-emerald-500/20">
-                    Approve
-                  </button>
-                </form>
-                <form action={reject}>
-                  <input type="hidden" name="id" value={t.id} />
-                  <button className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-1.5 text-sm font-medium text-red-300 hover:bg-red-500/20">
-                    Reject
-                  </button>
-                </form>
+                {/* Right: actions */}
+                <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-2">
+                  <form action={approve} className="contents sm:contents">
+                    <input type="hidden" name="id" value={t.id} />
+                    <button
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-sm font-medium text-emerald-200 hover:bg-emerald-500/25 sm:w-auto"
+                      aria-label="Approve trophy"
+                    >
+                      <Check className="h-4 w-4" /> Approve
+                    </button>
+                  </form>
+                  <form action={reject} className="contents sm:contents">
+                    <input type="hidden" name="id" value={t.id} />
+                    <button
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-red-500/40 bg-red-500/15 px-3 py-2 text-sm font-medium text-red-200 hover:bg-red-500/25 sm:w-auto"
+                      aria-label="Reject trophy"
+                    >
+                      <X className="h-4 w-4" /> Reject
+                    </button>
+                  </form>
+                </div>
               </div>
             </li>
           ))}
