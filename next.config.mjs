@@ -8,6 +8,8 @@ const base = {
   reactStrictMode: true,
   // Disable typed routes to reduce friction in migration; re-enable once links are typed
   typedRoutes: false,
+  // Optimize Docker runtime size
+  output: 'standalone',
   eslint: {
     ignoreDuringBuilds: true,
   },
