@@ -13,14 +13,19 @@ type Competition = 'UCL' | 'EUROPA';
 export default async function AdminTrophiesPage({
   searchParams,
 }: {
-  searchParams?: { userId?: string; competition?: string; approved?: string };
+  searchParams: Promise<{
+    userId?: string;
+    competition?: string;
+    approved?: string;
+  }>;
 }) {
   const session = await getServerSession(authOptions);
   const adminId = session?.user?.id ?? '';
 
-  const selectedUserId = searchParams?.userId ?? '';
-  const selectedComp = searchParams?.competition ?? '';
-  const approvedParam = searchParams?.approved ?? '';
+  const sp = await searchParams;
+  const selectedUserId = sp?.userId ?? '';
+  const selectedComp = sp?.competition ?? '';
+  const approvedParam = sp?.approved ?? '';
   const approvedFilter = approvedParam === 'true' ? true : approvedParam === 'false' ? false : undefined;
 
   const [usersForFilter, usersForCreate, trophies] = await Promise.all([
