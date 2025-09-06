@@ -6,9 +6,9 @@ import { getToken } from 'next-auth/jwt';
 const PUBLIC_PATHS = new Set([
   '/login',
   '/register',
-  '/offline',
   '/manifest.webmanifest',
   '/manifest.json',
+  '/offline',
   '/favicon.ico',
   '/robots.txt',
   '/sitemap.xml',

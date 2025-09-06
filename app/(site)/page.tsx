@@ -59,9 +59,7 @@ export default async function Home() {
         >
           Lihat Leaderboard
         </Secondary>
-        <Secondary href="/offline" icon={<Sparkles className="h-4 w-4" />}>
-          Coba Halaman Offline
-        </Secondary>
+        {/* Offline page removed */}
         <Secondary href="/me" icon={<UserRound className="h-4 w-4" />}>
           Profil Saya
         </Secondary>

@@ -48,10 +48,11 @@ registerRoute(
   'POST'
 );
 
-// ===== Navigation fallback -> /offline =====
+// Navigation fallback -> /offline when offline
 setCatchHandler(async ({ event }) => {
   if (event.request.mode === 'navigate') {
-    return caches.match('/offline');
+    const cached = await caches.match('/offline');
+    if (cached) return cached;
   }
   return Response.error();
 });
