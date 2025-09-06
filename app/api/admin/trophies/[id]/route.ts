@@ -8,8 +8,8 @@ function isCompetition(x: unknown): x is Competition {
   return x === 'UCL' || x === 'EUROPA';
 }
 
-function asId(param: string): string | number {
-  return /^\d+$/.test(param) ? Number(param) : param;
+function asId(param: string): string {
+  return param;
 }
 
 export async function GET(
@@ -18,7 +18,7 @@ export async function GET(
 ) {
   const id = asId(params.id);
   const t = await prisma.trophyAward.findUnique({
-    where: { id: id as any },
+    where: { id },
     include: { user: { select: { name: true } } },
   });
   if (!t) return NextResponse.json({ error: 'Not found' }, { status: 404 });
@@ -33,10 +33,6 @@ export async function GET(
   });
 }
 
-interface UpdatePayload {
-  competition?: Competition;
-  approved?: boolean;
-}
 export async function PUT(
   req: Request,
   { params }: { params: { id: string } }
@@ -71,7 +67,7 @@ export async function PUT(
   }
 
   const updated = await prisma.trophyAward.update({
-    where: { id: id as any },
+    where: { id },
     data,
     include: { user: { select: { name: true } } },
   });
@@ -91,6 +87,6 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const id = asId(params.id);
-  await prisma.trophyAward.delete({ where: { id: id as any } });
+  await prisma.trophyAward.delete({ where: { id } });
   return NextResponse.json({ ok: true });
 }
