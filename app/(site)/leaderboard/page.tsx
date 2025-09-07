@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db';
 import { Crown, Medal, Trophy } from 'lucide-react';
 import FilterClient from './FilterClient';
+import { Suspense } from 'react';
 
 type Query = { competition?: 'UCL' | 'EUROPA' };
 
@@ -58,7 +59,9 @@ export default async function LeaderboardPage({ searchParams }: any) {
 
       <div className="mb-3">
         <div className="rounded-xl border border-white/10 bg-white/[0.04] p-2">
-          <FilterClient initial={competition} />
+          <Suspense fallback={null}>
+            <FilterClient initial={competition} />
+          </Suspense>
         </div>
         <p className="mt-2 text-xs text-white/60">
           {competition ? `Kompetisi: ${competition}` : 'Semua kompetisi'}

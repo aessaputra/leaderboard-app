@@ -3,9 +3,17 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="w-full max-w-md mx-auto p-5" />}> 
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
   const sp = useSearchParams();
   const router = useRouter();
   const callbackUrl = sp.get('callbackUrl') ?? '/';

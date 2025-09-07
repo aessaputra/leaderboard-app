@@ -2,10 +2,18 @@
 
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { signIn } from 'next-auth/react';
 
 export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="w-full max-w-md mx-auto p-5" />}> 
+      <RegisterForm />
+    </Suspense>
+  );
+}
+
+function RegisterForm() {
   const sp = useSearchParams();
   const router = useRouter();
   const callbackUrl = sp.get('callbackUrl') ?? '/';
