@@ -31,6 +31,8 @@ textarea,
 select {
   color: var(--foreground);
   caret-color: var(--foreground);
+  -webkit-text-fill-color: var(--foreground);
+  forced-color-adjust: none;
 }
 
 /* Fix Chrome/Android autofill text color on dark backgrounds */
