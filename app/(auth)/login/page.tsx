@@ -50,7 +50,7 @@ function LoginForm() {
           <div className="mx-auto mb-2 h-10 w-10 rounded-full bg-white/10 grid place-items-center">
             ⚽️
           </div>
-          <h1 id="auth-title" className="text-2xl font-bold">
+          <h1 id="auth-title" className="text-2xl font-bold text-white">
             Masuk
           </h1>
           <p className="mt-1 text-sm text-gray-400">
