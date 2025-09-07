@@ -24,3 +24,24 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Ensure form controls are readable on mobile/dark mode */
+input,
+textarea,
+select {
+  color: var(--foreground);
+  caret-color: var(--foreground);
+}
+
+/* Fix Chrome/Android autofill text color on dark backgrounds */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--foreground) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color-scheme: dark;
+  }
+}
