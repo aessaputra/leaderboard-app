@@ -76,7 +76,7 @@ function RegisterForm() {
               name="name"
               required
               placeholder="Nama"
-              className="w-full rounded-xl border border-white/15 bg-black/10 px-3 py-3 outline-none placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white"
+              className="w-full rounded-xl border border-white/15 bg-black/10 px-3 py-3 outline-none text-white caret-white placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white"
             />
           </label>
           <label className="block">
@@ -87,7 +87,7 @@ function RegisterForm() {
               autoComplete="username"
               required
               placeholder="Email"
-              className="w-full rounded-xl border border-white/15 bg-black/10 px-3 py-3 outline-none placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white"
+              className="w-full rounded-xl border border-white/15 bg-black/10 px-3 py-3 outline-none text-white caret-white placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white"
             />
           </label>
           <label className="block">
@@ -100,7 +100,7 @@ function RegisterForm() {
                 required
                 minLength={6}
                 placeholder="Password"
-                className="w-full rounded-xl border border-white/15 bg-black/10 px-3 py-3 pr-12 outline-none placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white"
+                className="w-full rounded-xl border border-white/15 bg-black/10 px-3 py-3 pr-12 outline-none text-white caret-white placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white"
               />
               <button
                 type="button"

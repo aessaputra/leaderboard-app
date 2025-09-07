@@ -72,7 +72,7 @@ function LoginForm() {
               autoComplete="username"
               required
               placeholder="Email / Username"
-              className="w-full rounded-xl border border-white/15 bg-black/10 px-3 py-3 outline-none placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white"
+              className="w-full rounded-xl border border-white/15 bg-black/10 px-3 py-3 outline-none text-white caret-white placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white"
             />
           </label>
 
@@ -85,7 +85,7 @@ function LoginForm() {
                 autoComplete="current-password"
                 required
                 placeholder="Password"
-                className="w-full rounded-xl border border-white/15 bg-black/10 px-3 py-3 pr-12 outline-none placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white"
+                className="w-full rounded-xl border border-white/15 bg-black/10 px-3 py-3 pr-12 outline-none text-white caret-white placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white"
               />
               <button
                 type="button"
