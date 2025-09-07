@@ -29,9 +29,10 @@ body {
 input,
 textarea,
 select {
-  color: var(--foreground);
-  caret-color: var(--foreground);
-  -webkit-text-fill-color: var(--foreground);
+  /* Let components control colors; keep in sync with Tailwind classes */
+  color: inherit;
+  caret-color: currentColor;
+  -webkit-text-fill-color: currentColor;
   forced-color-adjust: none;
 }
 
@@ -39,11 +40,18 @@ select {
 input:-webkit-autofill,
 textarea:-webkit-autofill,
 select:-webkit-autofill {
-  -webkit-text-fill-color: var(--foreground) !important;
+  -webkit-text-fill-color: currentColor !important;
 }
 
 @media (prefers-color-scheme: dark) {
   body {
     color-scheme: dark;
   }
+}
+
+/* Always treat the site as dark to avoid auto-darkening issues
+   on Samsung Internet/Android Chrome for controls and UI chrome */
+html,
+body {
+  color-scheme: dark;
 }
