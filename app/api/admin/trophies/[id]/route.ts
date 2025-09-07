@@ -14,9 +14,10 @@ function asId(param: string): string {
 
 export async function GET(
   _req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = asId(params.id);
+  const { id: idRaw } = await params;
+  const id = asId(idRaw);
   const t = await prisma.trophyAward.findUnique({
     where: { id },
     include: { user: { select: { name: true } } },
@@ -35,9 +36,10 @@ export async function GET(
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = asId(params.id);
+  const { id: idRaw } = await params;
+  const id = asId(idRaw);
   const body = (await req.json()) as unknown;
 
   if (typeof body !== 'object' || body === null) {
@@ -84,9 +86,10 @@ export async function PUT(
 
 export async function DELETE(
   _req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = asId(params.id);
+  const { id: idRaw } = await params;
+  const id = asId(idRaw);
   await prisma.trophyAward.delete({ where: { id } });
   return NextResponse.json({ ok: true });
 }

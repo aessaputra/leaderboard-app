@@ -10,18 +10,12 @@ import { Trophy, Trash2, Save, Filter, CheckCircle2, Clock } from 'lucide-react'
 
 type Competition = 'UCL' | 'EUROPA';
 
-export default async function AdminTrophiesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{
-    userId?: string;
-    competition?: string;
-    approved?: string;
-  }>;
-}) {
+export default async function AdminTrophiesPage({ searchParams }: any) {
   const session = await getServerSession(authOptions);
   const adminId = session?.user?.id ?? '';
 
+  // Next.js v15 passes searchParams as a Promise; older versions pass an object.
+  // Await works for both (awaiting a non-Promise yields the value).
   const sp = await searchParams;
   const selectedUserId = sp?.userId ?? '';
   const selectedComp = sp?.competition ?? '';

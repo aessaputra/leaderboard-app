@@ -4,11 +4,8 @@ import FilterClient from './FilterClient';
 
 type Query = { competition?: 'UCL' | 'EUROPA' };
 
-export default async function LeaderboardPage({
-  searchParams,
-}: {
-  searchParams: Promise<Query>;
-}) {
+export default async function LeaderboardPage({ searchParams }: any) {
+  // Next.js v15 provides searchParams as a Promise; older versions provide an object.
   const { competition } = await searchParams;
 
   const where = competition

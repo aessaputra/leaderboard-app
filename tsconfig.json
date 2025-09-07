@@ -41,6 +41,7 @@
     "hooks/**/*.tsx",
     "lib/**/*.ts",
     "lib/**/*.tsx",
+    "types/**/*.d.ts",
     "next-env.d.ts",
     ".next/types/**/*.ts"
     // Do not include Next typed-routes validator in typecheck to avoid stale path errors
