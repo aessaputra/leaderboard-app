@@ -45,6 +45,8 @@ pnpm db:seed      # seed database
 
 - `next.config.mjs` is the single source of Next config. `typedRoutes` is disabled to reduce friction with strict typed `Link` routes. Re-enable once all links are typed.
 
+<!-- Standings feature removed (free plan limitation for 2025 season) -->
+
 ## Local Setup (no Docker)
 
 - Env: update both `.env` (Prisma reads this) and `.env.local` (Next.js reads this) with the same `DATABASE_URL` (Neon recommended) and `NEXTAUTH_SECRET`.

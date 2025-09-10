@@ -2,13 +2,7 @@ import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-import {
-  Trophy,
-  ListOrdered,
-  UserRound,
-  Sparkles,
-  ChevronRight,
-} from 'lucide-react';
+import { Trophy, ListOrdered, UserRound, ChevronRight } from 'lucide-react';
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -36,7 +30,7 @@ export default async function Home() {
 
       {/* Title only */}
       <h1 className="mt-1 text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent text-center">
-        Trophy Kite😄
+        Trophy Kite
     </h1>
 
       {/* Quick stats (opsional, hanya saat login) */}
@@ -53,13 +47,9 @@ export default async function Home() {
         <Primary href="/trophies/new" icon={<Trophy className="h-4 w-4" />}>
           Ajukan Trophy
         </Primary>
-        <Secondary
-          href="/leaderboard"
-          icon={<ListOrdered className="h-4 w-4" />}
-        >
+        <Secondary href="/leaderboard" icon={<ListOrdered className="h-4 w-4" />}>
           Lihat Leaderboard
         </Secondary>
-        {/* Offline page removed */}
         <Secondary href="/me" icon={<UserRound className="h-4 w-4" />}>
           Profil Saya
         </Secondary>
