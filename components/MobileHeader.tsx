@@ -24,8 +24,8 @@ export default function MobileHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur supports-[backdrop-filter]:bg-black/30">
-      <div className="mx-auto flex max-w-md items-center justify-between px-4 py-3">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur supports-[backdrop-filter]:bg-black/30 header-safe">
+      <div className="mx-auto flex max-w-md items-center justify-between px-4 py-3 safe-px">
         <div className="flex items-center gap-2">
           {canGoBack ? (
             <button

@@ -13,8 +13,8 @@ const items = [
 export default function AdminMobileNav() {
   const pathname = usePathname();
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-zinc-800 bg-black/70 backdrop-blur sm:hidden">
-      <ul className="mx-auto flex max-w-md items-stretch justify-between px-2">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-zinc-800 bg-black/70 backdrop-blur sm:hidden toolbar-safe">
+      <ul className="mx-auto flex max-w-md items-stretch justify-between px-2 safe-px">
         {items.map(({ href, label, Icon }) => {
           const active = pathname === href || pathname.startsWith(href + '/');
           return (
@@ -37,4 +37,3 @@ export default function AdminMobileNav() {
     </nav>
   );
 }
-

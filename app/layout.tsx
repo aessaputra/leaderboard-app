@@ -1,8 +1,13 @@
 import './globals.css';
+import type { Metadata } from 'next';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'PES Trophy',
   manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+  },
   icons: {
     icon: [
       { url: '/icons/icon-32.png', type: 'image/png', sizes: '32x32' },
@@ -11,6 +16,8 @@ export const metadata = {
     apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
 };
+
+// Viewport is configured in app/viewport.ts
 
 export default function RootLayout({
   children,

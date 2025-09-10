@@ -16,7 +16,7 @@ export default function AdminNav() {
 
   return (
     <nav className="border-t border-white/10 bg-black/60 px-2">
-      <ul className="mx-auto flex max-w-3xl gap-2 overflow-x-auto py-2">
+      <ul className="mx-auto flex max-w-3xl gap-2 overflow-x-auto py-2 safe-px">
         {items.map(({ href, label, icon: Icon }) => {
           const active = pathname.startsWith(href);
           return (

@@ -11,8 +11,8 @@ const items = [
 export default function TabBar() {
   const pathname = usePathname();
   return (
-    <nav className="sticky bottom-0 z-40 border-t border-white/10 bg-black/60 backdrop-blur supports-[backdrop-filter]:bg-black/30">
-      <ul className="mx-auto flex max-w-md items-stretch justify-between px-2">
+    <nav className="sticky bottom-0 z-40 border-t border-white/10 bg-black/60 backdrop-blur supports-[backdrop-filter]:bg-black/30 toolbar-safe">
+      <ul className="mx-auto flex max-w-md items-stretch justify-between px-2 safe-px">
         {items.map((it) => {
           const active = pathname === it.href;
           return (

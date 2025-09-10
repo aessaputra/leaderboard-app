@@ -15,8 +15,8 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     <div className="min-h-dvh bg-black text-zinc-100">
       <SkipLink target="#admin-main" />
 
-      <header className="sticky top-0 z-40 border-b border-zinc-800 bg-black/70 backdrop-blur">
-        <div className="mx-auto flex h-14 w-full max-w-md items-center justify-between px-3 sm:max-w-5xl sm:px-4">
+      <header className="sticky top-0 z-40 border-b border-zinc-800 bg-black/70 backdrop-blur header-safe">
+        <div className="mx-auto flex h-14 w-full max-w-md items-center justify-between px-3 sm:max-w-5xl sm:px-4 safe-px">
           <Link
             href="/admin"
             className="rounded font-semibold tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
@@ -31,7 +31,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
       <main
         id="admin-main"
         tabIndex={-1}
-        className="mx-auto w-full max-w-md px-3 py-6 pb-24 outline-none sm:max-w-5xl sm:px-4 sm:py-8"
+        className="mx-auto w-full max-w-md px-3 py-6 pb-24 outline-none sm:max-w-5xl sm:px-4 sm:py-8 safe-px"
         aria-live="polite"
       >
         {children}
