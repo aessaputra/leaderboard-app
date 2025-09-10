@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0EA5E9"/>
+      <stop offset="1" stop-color="#6366F1"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded background with gradient (full-bleed for maskable) -->
+  <rect x="0" y="0" width="1024" height="1024" rx="220" fill="url(#bg)"/>
+
+  <!-- Soft top highlight -->
+  <rect x="64" y="64" width="896" height="360" rx="180" fill="url(#shine)"/>
+
+  <!-- Leaderboard bars (modern minimal) -->
+  <!-- subtle shadow -->
+  <g opacity="0.14" transform="translate(8,10)">
+    <rect x="272" y="600" width="120" height="220" rx="60" fill="#0B1020"/>
+    <rect x="452" y="480" width="120" height="340" rx="60" fill="#0B1020"/>
+    <rect x="632" y="660" width="120" height="160" rx="60" fill="#0B1020"/>
+  </g>
+  <g fill="#FFFFFF">
+    <rect x="272" y="592" width="120" height="220" rx="60"/>
+    <rect x="452" y="472" width="120" height="340" rx="60"/>
+    <rect x="632" y="652" width="120" height="160" rx="60"/>
+  </g>
+
+  <!-- Award star above bars -->
+  <!-- shadow -->
+  <path d="M512 240 L556 360 L686 360 L578 436 L616 572 L512 496 L408 572 L446 436 L338 360 L468 360 Z" fill="#0B1020" opacity="0.18" transform="translate(8,10)"/>
+  <path d="M512 240 L556 360 L686 360 L578 436 L616 572 L512 496 L408 572 L446 436 L338 360 L468 360 Z" fill="#FFFFFF"/>
+
+  <!-- Base for bars (subtle plate) -->
+  <rect x="216" y="760" width="592" height="56" rx="28" fill="#FFFFFF" opacity="0.2"/>
+</svg>
+

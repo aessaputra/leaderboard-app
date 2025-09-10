@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p 3000",
+    "icons": "node scripts/generate-icons.mjs",
     "lint": "next lint --max-warnings=0 --dir app --dir components --dir lib --dir hooks",
     "lint:fix": "next lint --fix --max-warnings=0 --dir app --dir components --dir lib --dir hooks",
     "check": "pnpm lint && pnpm typecheck",
@@ -44,6 +45,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
+    "sharp": "^0.34.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

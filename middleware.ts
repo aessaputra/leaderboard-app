@@ -8,6 +8,7 @@ const PUBLIC_PATHS = new Set([
   '/register',
   '/manifest.webmanifest',
   '/manifest.json',
+  '/apple-touch-icon.png',
   '/offline',
   '/favicon.ico',
   '/robots.txt',
