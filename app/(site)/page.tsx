@@ -1,6 +1,8 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { CTA } from '@/components/ui/cta';
+import { Images } from 'lucide-react';
 // Home shows quick stats only; actions are in bottom navigation
 
 export default async function Home() {
@@ -36,7 +38,17 @@ export default async function Home() {
         </section>
       )}
 
-      {/* Actions removed — use bottom navigation */}
+      {/* Home-only actions */}
+      <section className="mt-6">
+        <CTA
+          href="/gallery"
+          variant="primary"
+          className="w-full rounded-2xl border border-gray-200 bg-white text-gray-900 shadow-sm hover:bg-gray-50 dark:border-white/10 dark:bg-white/10 dark:text-white dark:hover:bg-white/15"
+        >
+          <Images className="h-4 w-4" />
+          Buka Galeri
+        </CTA>
+      </section>
     </main>
   );
 }
