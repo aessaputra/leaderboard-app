@@ -58,11 +58,21 @@ export async function POST(req: Request) {
 
 // For Vercel Cron (GET). Pass token as query param set from Vercel Dashboard (not committed).
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const token = searchParams.get('token');
-  if (!token || token !== process.env.GALLERY_CLEANUP_TOKEN) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  // Preferred for Vercel Cron: Authorization: Bearer ${CRON_SECRET}
+  const auth = req.headers.get('authorization') || '';
+  const cronSecret = process.env.CRON_SECRET;
+  const hasCronAuth = !!cronSecret && auth === `Bearer ${cronSecret}`;
+
+  // Fallback: token query for manual calls or when header unavailable
+  let ok = hasCronAuth;
+  if (!ok) {
+    const { searchParams } = new URL(req.url);
+    const token = searchParams.get('token');
+    if (token && token === process.env.GALLERY_CLEANUP_TOKEN) ok = true;
   }
+
+  if (!ok) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const summary = await doCleanup();
   return NextResponse.json(summary);
 }
