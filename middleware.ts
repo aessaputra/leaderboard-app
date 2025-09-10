@@ -27,6 +27,8 @@ function isAlwaysPublic(pathname: string) {
 function isPublic(pathname: string) {
   if (isAlwaysPublic(pathname)) return true;
   if (pathname.startsWith('/api/auth')) return true;
+  // Allow internal cleanup endpoint to handle its own auth (CRON_SECRET/GALLERY_CLEANUP_TOKEN)
+  if (pathname === '/api/admin/gallery/cleanup') return true;
   if (PUBLIC_PATHS.has(pathname)) return true;
   return false;
 }
