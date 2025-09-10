@@ -57,7 +57,7 @@ export default async function RequestsPage() {
       </header>
 
       {pending.length === 0 ? (
-        <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-gray-400">
+        <div className="rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-gray-400">
           Tidak ada pengajuan trophy yang menunggu persetujuan.
         </div>
       ) : (
@@ -65,7 +65,7 @@ export default async function RequestsPage() {
           {pending.map((t) => (
             <li
               key={t.id}
-              className="rounded-xl border border-white/10 bg-white/5 p-3 sm:p-4"
+              className="rounded-xl border border-gray-200 bg-white p-3 sm:p-4 dark:border-white/10 dark:bg-white/5"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 {/* Left: info */}
@@ -73,14 +73,14 @@ export default async function RequestsPage() {
                   <div className="truncate text-base font-medium">
                     {t.user?.name ?? '(Tanpa nama)'}
                   </div>
-                  <div className="truncate text-xs text-gray-400">
+                  <div className="truncate text-xs text-gray-500 dark:text-gray-400">
                     {t.user?.email}
                   </div>
                   <div className="mt-1 flex items-center gap-2 text-sm">
-                    <span className="rounded border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-semibold">
+                    <span className="rounded border border-gray-200 bg-gray-50 px-2 py-0.5 text-xs font-semibold dark:border-white/10 dark:bg-white/5">
                       {t.competition}
                     </span>
-                    <span className="flex items-center gap-1 text-xs text-gray-400">
+                    <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                       <Clock className="h-3.5 w-3.5" />
                       {new Date(t.createdAt).toLocaleString()}
                     </span>
@@ -95,7 +95,9 @@ export default async function RequestsPage() {
                   <form action={approve} className="contents sm:contents">
                     <input type="hidden" name="id" value={t.id} />
                     <button
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-sm font-medium text-emerald-200 hover:bg-emerald-500/25 sm:w-auto"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium 
+                        border-emerald-600/20 bg-emerald-50 text-emerald-700 hover:bg-emerald-100
+                        dark:border-emerald-500/40 dark:bg-emerald-500/15 dark:text-emerald-200 dark:hover:bg-emerald-500/25 sm:w-auto"
                       aria-label="Approve trophy"
                     >
                       <Check className="h-4 w-4" /> Approve
@@ -104,7 +106,9 @@ export default async function RequestsPage() {
                   <form action={reject} className="contents sm:contents">
                     <input type="hidden" name="id" value={t.id} />
                     <button
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-red-500/40 bg-red-500/15 px-3 py-2 text-sm font-medium text-red-200 hover:bg-red-500/25 sm:w-auto"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium 
+                        border-red-600/20 bg-red-50 text-red-700 hover:bg-red-100
+                        dark:border-red-500/40 dark:bg-red-500/15 dark:text-red-200 dark:hover:bg-red-500/25 sm:w-auto"
                       aria-label="Reject trophy"
                     >
                       <X className="h-4 w-4" /> Reject

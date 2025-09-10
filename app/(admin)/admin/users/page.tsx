@@ -40,13 +40,13 @@ export default async function AdminUsersPage() {
       </header>
 
       {pending.length === 0 ? (
-        <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-gray-400">
+        <div className="rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-gray-400">
           Tidak ada user pending.
         </div>
       ) : (
         <>
-          <div className="mb-3 text-sm text-gray-400">
-            <span className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5">
+          <div className="mb-3 text-sm text-gray-600 dark:text-gray-400">
+            <span className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 dark:border-white/10 dark:bg-white/5">
               <UserPlus className="h-4 w-4" /> {pending.length} user menunggu persetujuan
             </span>
           </div>
@@ -54,14 +54,14 @@ export default async function AdminUsersPage() {
             {pending.map((u) => (
               <li
                 key={u.id}
-                className="rounded-xl border border-white/10 bg-white/5 p-3 sm:p-4"
+                className="rounded-xl border border-gray-200 bg-white p-3 sm:p-4 dark:border-white/10 dark:bg-white/5"
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="min-w-0">
                     <div className="truncate text-base font-medium">
                       {u.name ?? '(Tanpa nama)'}
                     </div>
-                    <div className="mt-0.5 flex items-center gap-2 text-xs text-gray-400">
+                    <div className="mt-0.5 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                       <Mail className="h-3.5 w-3.5" />
                       <span className="truncate">{u.email}</span>
                     </div>
@@ -74,7 +74,9 @@ export default async function AdminUsersPage() {
                   <form action={approveUser} className="sm:ml-3">
                     <input type="hidden" name="id" value={u.id} />
                     <button
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-2 text-sm font-medium text-emerald-200 hover:bg-emerald-500/25 sm:w-auto"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium 
+                        border-emerald-600/20 bg-emerald-50 text-emerald-700 hover:bg-emerald-100
+                        dark:border-emerald-500/40 dark:bg-emerald-500/15 dark:text-emerald-200 dark:hover:bg-emerald-500/25 sm:w-auto"
                       aria-label={`Approve ${u.email}`}
                     >
                       <Check className="h-4 w-4" /> Approve

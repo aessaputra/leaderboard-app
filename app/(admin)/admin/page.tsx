@@ -36,92 +36,46 @@ export default async function AdminDashboardPage() {
 
       {/* Quick stats */}
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-xl border border-white/10 bg-neutral-900/60 p-4">
-          <div className="flex items-center gap-2 text-sm text-gray-400">
+        <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-neutral-900/60">
+          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
             <Users2 className="h-4 w-4" /> Users
           </div>
           <div className="mt-2 text-2xl font-semibold">{totals.users}</div>
         </div>
-        <div className="rounded-xl border border-white/10 bg-neutral-900/60 p-4">
-          <div className="flex items-center gap-2 text-sm text-gray-400">
+        <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-neutral-900/60">
+          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
             <Trophy className="h-4 w-4" /> Total Trophy
           </div>
           <div className="mt-2 text-2xl font-semibold">{totals.trophies}</div>
-          <div className="mt-1 text-xs text-gray-400">UCL {totals.ucl} • EUROPA {totals.europa}</div>
+          <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">UCL {totals.ucl} • EUROPA {totals.europa}</div>
         </div>
         <Link
           href="/admin/trophies/requests"
-          className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 hover:bg-amber-500/15"
+          className="rounded-xl border border-amber-200 bg-amber-50 p-4 hover:bg-amber-100 dark:border-amber-500/30 dark:bg-amber-500/10 dark:hover:bg-amber-500/15"
         >
-          <div className="flex items-center gap-2 text-sm text-amber-300">
+          <div className="flex items-center gap-2 text-sm text-amber-700 dark:text-amber-300">
             <Clock className="h-4 w-4" /> Pending Trophy
           </div>
-          <div className="mt-2 text-2xl font-semibold text-amber-200">
+          <div className="mt-2 text-2xl font-semibold text-amber-700 dark:text-amber-200">
             {pendingTrophies}
           </div>
-          <div className="mt-1 text-xs text-amber-300/80">Klik untuk review</div>
+          <div className="mt-1 text-xs text-amber-700/80 dark:text-amber-300/80">Klik untuk review</div>
         </Link>
         <Link
           href="/admin/users"
-          className="rounded-xl border border-sky-500/30 bg-sky-500/10 p-4 hover:bg-sky-500/15"
+          className="rounded-xl border border-sky-200 bg-sky-50 p-4 hover:bg-sky-100 dark:border-sky-500/30 dark:bg-sky-500/10 dark:hover:bg-sky-500/15"
         >
-          <div className="flex items-center gap-2 text-sm text-sky-300">
+          <div className="flex items-center gap-2 text-sm text-sky-700 dark:text-sky-300">
             <CheckCircle2 className="h-4 w-4" /> Pending Users
           </div>
-          <div className="mt-2 text-2xl font-semibold text-sky-200">
+          <div className="mt-2 text-2xl font-semibold text-sky-700 dark:text-sky-200">
             {pendingUsers}
           </div>
-          <div className="mt-1 text-xs text-sky-300/80">Klik untuk approve</div>
+          <div className="mt-1 text-xs text-sky-700/80 dark:text-sky-300/80">Klik untuk approve</div>
         </Link>
       </section>
 
-      {/* Quick actions (mobile-first single column) */}
-      <section className="grid gap-4">
-        <Link
-          href="/admin/trophies"
-          className="rounded-xl border border-white/10 bg-neutral-900/60 p-4 hover:bg-neutral-900/80"
-        >
-          <div className="flex items-center gap-2 text-lg font-semibold">
-            <Trophy className="h-5 w-5" /> CRUD Trophy
-          </div>
-          <div className="text-sm text-gray-400">
-            Tambah, edit, dan hapus trophy milik user.
-          </div>
-        </Link>
-      </section>
-
-      {/* Recent activity */}
-      <section className="rounded-xl border border-white/10 bg-neutral-900/60 p-4">
-        <div className="mb-3 text-lg font-semibold">Aktivitas Terbaru</div>
-        {recent.length === 0 ? (
-          <p className="text-sm text-gray-400">Belum ada aktivitas.</p>
-        ) : (
-          <ul className="divide-y divide-white/5">
-            {recent.map((t) => (
-              <li key={t.id} className="flex items-center justify-between py-2 text-sm">
-                <div className="min-w-0">
-                  <div className="truncate font-medium">
-                    {t.user?.name ?? t.user?.email ?? 'Unknown'}
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    {t.competition} • {new Date(t.createdAt).toLocaleString()}
-                  </div>
-                </div>
-                <span
-                  className={
-                    'ml-3 shrink-0 rounded-full px-2 py-0.5 text-xs ' +
-                    (t.approved
-                      ? 'border border-emerald-400/40 bg-emerald-500/10 text-emerald-200'
-                      : 'border border-amber-400/40 bg-amber-500/10 text-amber-200')
-                  }
-                >
-                  {t.approved ? 'Approved' : 'Pending'}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      {/* Quick actions section removed; use sidebar navigation instead */}
 
       {/* Kembali ke situs dihapus sesuai permintaan */}
     </div>

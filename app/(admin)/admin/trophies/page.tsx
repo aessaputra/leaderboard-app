@@ -2,6 +2,7 @@
 export const runtime = 'nodejs';
 
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/db';
 import { createTrophy, updateTrophy, deleteTrophy } from './actions';
 import { getServerSession } from 'next-auth';
@@ -11,7 +12,12 @@ import { Trophy, Trash2, Save, Filter, CheckCircle2, Clock } from 'lucide-react'
 type Competition = 'UCL' | 'EUROPA';
 
 export default async function AdminTrophiesPage({ searchParams }: any) {
+  // Redirect this legacy page to Manage to keep only two entries in sidebar
   const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== 'ADMIN') return null;
+  return redirect('/admin/trophies/manage');
+
+  // Unreachable: previous full CRUD UI retained below for reference if needed
   const adminId = session?.user?.id ?? '';
 
   // Next.js v15 passes searchParams as a Promise; older versions pass an object.
