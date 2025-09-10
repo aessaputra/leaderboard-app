@@ -36,7 +36,7 @@ export default function MobileHeader() {
               ←
             </button>
           ) : (
-            <Link href="/" className="font-semibold">
+            <Link href="/" className="font-semibold ml-2 sm:ml-3">
               PES Trophy ⚽️
             </Link>
           )}

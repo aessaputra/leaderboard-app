@@ -36,7 +36,7 @@ export default async function Home() {
 
       {/* Title only */}
       <h1 className="mt-1 text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent text-center">
-        Trophy Leaderboard
+        Trophy Kite😄
     </h1>
 
       {/* Quick stats (opsional, hanya saat login) */}
