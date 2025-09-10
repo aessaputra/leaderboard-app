@@ -22,10 +22,10 @@ export default function SiteBottomNav() {
             ? pathname === '/'
             : pathname === href || pathname.startsWith(href + '/');
         const cls =
-          'flex h-12 w-14 sm:w-16 shrink-0 items-center justify-center rounded-xl border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ' +
+          'flex h-12 w-14 sm:w-16 shrink-0 items-center justify-center rounded-xl border transition focus:outline-none focus:ring-2 focus:ring-brand-500/20 ' +
           (active
-            ? 'border-white/20 bg-white/15 text-white ring-1 ring-sky-400/40'
-            : 'border-white/10 bg-white/5 text-gray-300 hover:bg-white/10');
+            ? 'border-brand-300 bg-brand-50 text-brand-600 dark:border-white/20 dark:bg-white/15 dark:text-white'
+            : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-gray-300 dark:hover:bg-white/10');
         return (
           <Link key={href} href={href} className={cls} aria-label={label} aria-current={active ? 'page' : undefined}>
             <Icon className="h-5 w-5" />
