@@ -16,7 +16,7 @@ export default async function SiteLayout({
   return (
     <div className="min-h-dvh bg-black text-gray-100">
       <header className="sticky top-0 z-40 border-b border-white/10 bg-black/70 backdrop-blur header-safe">
-        <div className="mx-auto flex h-14 w-full max-w-md items-center justify-between px-5 sm:max-w-3xl safe-px">
+        <div className="mx-auto flex h-14 w-full max-w-md items-center justify-between px-10 sm:px-12 sm:max-w-3xl safe-px">
           <Link href="/" className="font-semibold">
             PES Trophy ⚽
           </Link>
