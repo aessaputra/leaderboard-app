@@ -51,19 +51,19 @@ export default async function LeaderboardPage({ searchParams }: any) {
   });
 
   return (
-    <div className="mx-auto w-full max-w-md">
+    <div className="mx-auto w-full max-w-md px-2 sm:px-0">
       <header className="mb-4 flex items-center gap-2">
-        <Trophy className="h-5 w-5 text-yellow-400" />
+        <Trophy className="h-5 w-5 text-brand-500 dark:text-yellow-400" />
         <h1 className="text-xl font-semibold">Leaderboard</h1>
       </header>
 
       <div className="mb-3">
-        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-2">
+        <div className="rounded-xl border border-gray-200 bg-white p-2 dark:border-white/10 dark:bg-white/5">
           <Suspense fallback={null}>
             <FilterClient initial={competition} />
           </Suspense>
         </div>
-        <p className="mt-2 text-xs text-white/60">
+        <p className="mt-2 text-xs text-gray-500 dark:text-white/60">
           {competition ? `Kompetisi: ${competition}` : 'Semua kompetisi'}
         </p>
       </div>
@@ -95,14 +95,18 @@ function Pill({
   tone?: 'ucl' | 'europa' | 'total' | 'default';
   big?: boolean;
 }) {
-  const toneClass =
-    tone === 'ucl'
-      ? 'border-blue-400/50 bg-blue-400/10'
-      : tone === 'europa'
-      ? 'border-amber-400/50 bg-amber-400/10'
-      : tone === 'total'
-      ? 'border-slate-400/50 bg-slate-400/10'
-      : 'border-white/15 bg-white/5';
+  const toneClass = (() => {
+    switch (tone) {
+      case 'ucl':
+        return 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-400/50 dark:bg-blue-400/10 dark:text-blue-200';
+      case 'europa':
+        return 'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-400/50 dark:bg-amber-400/10 dark:text-amber-200';
+      case 'total':
+        return 'border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-400/50 dark:bg-slate-400/10 dark:text-slate-200';
+      default:
+        return 'border-gray-200 bg-gray-50 text-gray-600 dark:border-white/15 dark:bg-white/5 dark:text-gray-300';
+    }
+  })();
   return (
     <span
       className={[
@@ -155,9 +159,9 @@ function RankCard({
   data: { name: string; ucl: number; europa: number; total: number };
 }) {
   return (
-    <li className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
+    <li className="rounded-xl border border-gray-200 bg-white p-3 dark:border-white/10 dark:bg-white/5">
       <div className="flex items-center gap-3">
-        <div className="grid h-7 w-7 place-items-center rounded-full border border-white/15 bg-white/5 text-[12px] font-medium">
+        <div className="grid h-7 w-7 place-items-center rounded-full border border-gray-200 bg-gray-50 text-[12px] font-medium dark:border-white/15 dark:bg-white/5">
           {rank}
         </div>
         <div className="min-w-0 flex-1">
@@ -175,9 +179,9 @@ function RankCard({
 
 function EmptyState() {
   return (
-    <div className="mt-6 rounded-xl border border-white/10 bg-white/[0.03] p-6 text-center">
-      <Medal className="mx-auto mb-2 h-6 w-6 text-white/50" />
-      <p className="text-sm text-white/70">
+    <div className="mt-6 rounded-xl border border-gray-200 bg-white p-6 text-center dark:border-white/10 dark:bg-white/5">
+      <Medal className="mx-auto mb-2 h-6 w-6 text-gray-500 dark:text-white/50" />
+      <p className="text-sm text-gray-600 dark:text-white/70">
         Belum ada data leaderboard untuk filter ini.
       </p>
     </div>

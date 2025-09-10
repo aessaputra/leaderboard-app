@@ -81,7 +81,7 @@ export default async function MePage() {
           recent.map((r) => (
             <li
               key={r.id}
-              className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-gradient-to-b dark:from-white/6 dark:to-white/4"
+              className="rounded-xl border border-gray-200 bg-white p-4 transition-colors dark:border-white/10 dark:bg-white/5"
             >
               <div className="flex items-center justify-between">
                 <span className="rounded-full border border-gray-200 bg-gray-50 px-2.5 py-1 text-[11px] font-semibold dark:border-white/15 dark:bg-white/5">

@@ -25,6 +25,7 @@ model User {
   role      Role          @default(USER)
   approved  Boolean       @default(false)
   trophies  TrophyAward[]
+  gallery   GalleryImage[]
   createdAt DateTime      @default(now())
 }
 
@@ -38,4 +39,25 @@ model TrophyAward {
   approved    Boolean      @default(false)
 
   user        User         @relation(fields: [userId], references: [id])
+}
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  uploaderId  String
+  url         String
+  displayUrl  String
+  thumbUrl    String?
+  deleteUrl   String?
+  caption     String?   @db.Text
+  width       Int?
+  height      Int?
+  size        Int?
+  expiresAt   DateTime
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  uploader    User      @relation(fields: [uploaderId], references: [id])
+
+  @@index([createdAt, expiresAt])
+  @@index([expiresAt])
+  @@index([deletedAt])
 }

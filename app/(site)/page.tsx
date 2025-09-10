@@ -1,6 +1,8 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { CTA } from '@/components/ui/cta';
+import { Images } from 'lucide-react';
 // Home shows quick stats only; actions are in bottom navigation
 
 export default async function Home() {
@@ -22,15 +24,10 @@ export default async function Home() {
 
   return (
     <main className="relative mx-auto max-w-md p-5 pb-28">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(900px_360px_at_50%_-120px,rgba(255,255,255,0.08),transparent)]"
-      />
-
       {/* Title only */}
-      <h1 className="mt-1 text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent text-center">
+      <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-center text-gray-900 dark:text-gray-100">
         Trophy Kite
-    </h1>
+      </h1>
 
       {/* Quick stats (opsional, hanya saat login) */}
       {user && (
@@ -41,17 +38,25 @@ export default async function Home() {
         </section>
       )}
 
-      {/* Actions removed — use bottom navigation */}
+      {/* Home-only actions */}
+      <section className="mt-6">
+        <CTA
+          href="/gallery"
+          variant="primary"
+          className="w-full rounded-2xl border border-gray-200 bg-white text-gray-900 shadow-sm hover:bg-gray-50 dark:border-white/10 dark:bg-white/10 dark:text-white dark:hover:bg-white/15"
+        >
+          <Images className="h-4 w-4" />
+          Buka Galeri
+        </CTA>
+      </section>
     </main>
   );
 }
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-center shadow-sm backdrop-blur">
-      <div className="text-[11px] uppercase tracking-wide text-gray-400">
-        {label}
-      </div>
+    <div className="rounded-xl border border-gray-200 bg-white p-3 text-center shadow-sm dark:border-white/10 dark:bg-white/5">
+      <div className="text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400">{label}</div>
       <div className="text-2xl font-semibold">{value}</div>
     </div>
   );

@@ -42,12 +42,8 @@ export default async function NewTrophyPage() {
 
       <form action={submit} className="space-y-4">
         {/* Segmented toggle */}
-        <div
-          role="radiogroup"
-          aria-label="Pilih kompetisi"
-          className="grid grid-cols-2 gap-3"
-        >
-          <label className="relative overflow-hidden rounded-2xl border border-white/12 bg-white/[0.04] p-0.5">
+        <div role="radiogroup" aria-label="Pilih kompetisi" className="grid grid-cols-2 gap-3">
+          <label className="relative overflow-hidden rounded-2xl border p-0.5 border-gray-200 bg-white dark:border-white/12 dark:bg-white/[0.04]">
             <input
               type="radio"
               name="competition"
@@ -56,16 +52,16 @@ export default async function NewTrophyPage() {
               className="peer sr-only"
             />
             <div
-              className="flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-[15px] font-semibold transition
-                            peer-checked:bg-blue-500/15 peer-checked:text-blue-200
-                            peer-checked:border-blue-400/40 border border-transparent"
+              className="flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-[15px] font-semibold transition border 
+                         border-transparent peer-checked:border-brand-300 peer-checked:bg-brand-50 peer-checked:text-brand-600
+                         dark:peer-checked:border-blue-400/40 dark:peer-checked:bg-blue-500/15 dark:peer-checked:text-blue-200"
             >
               <Trophy className="h-4 w-4" />
               UCL
             </div>
           </label>
 
-          <label className="relative overflow-hidden rounded-2xl border border-white/12 bg-white/[0.04] p-0.5">
+          <label className="relative overflow-hidden rounded-2xl border p-0.5 border-gray-200 bg-white dark:border-white/12 dark:bg-white/[0.04]">
             <input
               type="radio"
               name="competition"
@@ -73,9 +69,9 @@ export default async function NewTrophyPage() {
               className="peer sr-only"
             />
             <div
-              className="flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-[15px] font-semibold transition
-                            peer-checked:bg-amber-500/15 peer-checked:text-amber-200
-                            peer-checked:border-amber-400/40 border border-transparent"
+              className="flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-[15px] font-semibold transition border
+                         border-transparent peer-checked:border-amber-300 peer-checked:bg-amber-50 peer-checked:text-amber-700
+                         dark:peer-checked:border-amber-400/40 dark:peer-checked:bg-amber-500/15 dark:peer-checked:text-amber-200"
             >
               <ShieldCheck className="h-4 w-4" />
               EUROPA
@@ -86,7 +82,7 @@ export default async function NewTrophyPage() {
         {/* Submit */}
         <SubmitButton label="Kirim Pengajuan" />
 
-        <p className="text-xs text-white/60">
+        <p className="text-xs text-gray-500 dark:text-white/60">
           Pengajuan akan menunggu persetujuan admin sebelum masuk leaderboard.
         </p>
       </form>
