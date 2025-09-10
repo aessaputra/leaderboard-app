@@ -1,8 +1,7 @@
-import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-import { Trophy, ListOrdered, UserRound, ChevronRight } from 'lucide-react';
+// Home shows quick stats only; actions are in bottom navigation
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -42,18 +41,7 @@ export default async function Home() {
         </section>
       )}
 
-      {/* Aksi utama */}
-      <nav className="mt-6 space-y-3">
-        <Primary href="/trophies/new" icon={<Trophy className="h-4 w-4" />}>
-          Ajukan Trophy
-        </Primary>
-        <Secondary href="/leaderboard" icon={<ListOrdered className="h-4 w-4" />}>
-          Lihat Leaderboard
-        </Secondary>
-        <Secondary href="/me" icon={<UserRound className="h-4 w-4" />}>
-          Profil Saya
-        </Secondary>
-      </nav>
+      {/* Actions removed — use bottom navigation */}
     </main>
   );
 }
@@ -69,48 +57,4 @@ function Stat({ label, value }: { label: string; value: number }) {
   );
 }
 
-function Primary({
-  href,
-  icon,
-  children,
-}: {
-  href: string;
-  icon: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-white px-4 py-3 text-sm font-medium text-black shadow-sm transition active:scale-[0.99]"
-    >
-      <span className="inline-flex items-center gap-2">
-        {icon}
-        {children}
-      </span>
-      <ChevronRight className="h-4 w-4 opacity-60 transition group-hover:translate-x-0.5" />
-    </Link>
-  );
-}
-
-function Secondary({
-  href,
-  icon,
-  children,
-}: {
-  href: string;
-  icon: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group inline-flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-medium hover:bg-white/10"
-    >
-      <span className="inline-flex items-center gap-2">
-        {icon}
-        {children}
-      </span>
-      <ChevronRight className="h-4 w-4 opacity-50 transition group-hover:translate-x-0.5" />
-    </Link>
-  );
-}
+// No page-level CTA components; navigation lives at the bottom bar
