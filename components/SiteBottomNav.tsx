@@ -15,7 +15,7 @@ export default function SiteBottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="mx-auto grid w-full max-w-md grid-cols-4 gap-2 p-3 sm:max-w-3xl safe-px">
+    <nav className="mx-auto grid w-full max-w-md grid-cols-4 gap-3 py-3 px-4 sm:max-w-3xl safe-px">
       {items.map(({ href, label, Icon }) => {
         const active =
           href === '/'
@@ -36,4 +36,3 @@ export default function SiteBottomNav() {
     </nav>
   );
 }
-
