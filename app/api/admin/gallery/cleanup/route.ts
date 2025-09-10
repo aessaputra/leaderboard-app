@@ -3,13 +3,7 @@ export const runtime = 'nodejs';
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 
-export async function POST(req: Request) {
-  const auth = req.headers.get('authorization') || '';
-  const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
-  if (!token || token !== process.env.GALLERY_CLEANUP_TOKEN) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
+async function doCleanup() {
   const now = new Date();
   // Hard purge expired or soft-deleted rows
   const purged = await prisma.galleryImage.deleteMany({
@@ -48,5 +42,27 @@ export async function POST(req: Request) {
     }
   }
 
-  return NextResponse.json({ purged: purged.count, revalidated, markedDeleted });
+  return { purged: purged.count, revalidated, markedDeleted };
+}
+
+// For external schedulers (GH Actions, etc.) using Authorization header
+export async function POST(req: Request) {
+  const auth = req.headers.get('authorization') || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+  if (!token || token !== process.env.GALLERY_CLEANUP_TOKEN) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const summary = await doCleanup();
+  return NextResponse.json(summary);
+}
+
+// For Vercel Cron (GET). Pass token as query param set from Vercel Dashboard (not committed).
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const token = searchParams.get('token');
+  if (!token || token !== process.env.GALLERY_CLEANUP_TOKEN) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const summary = await doCleanup();
+  return NextResponse.json(summary);
 }
