@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import SiteBottomNav from '@/components/SiteBottomNav';
 
 export default async function SiteLayout({
   children,
@@ -19,14 +20,6 @@ export default async function SiteLayout({
           <Link href="/" className="font-semibold">
             PES Trophy ⚽
           </Link>
-          <nav className="flex items-center gap-3 text-sm">
-            <Link
-              href="/"
-              className="rounded-lg border border-white/10 bg-white/5 px-3 py-1 hover:bg-white/10"
-            >
-              Home
-            </Link>
-          </nav>
         </div>
       </header>
 
@@ -35,26 +28,7 @@ export default async function SiteLayout({
       <footer
         className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-black/70 backdrop-blur toolbar-safe"
       >
-        <nav className="mx-auto grid w-full max-w-md grid-cols-3 gap-2 p-3 text-xs sm:max-w-3xl sm:text-sm safe-px">
-          <Link
-            href="/leaderboard"
-            className="block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center hover:bg-white/10"
-          >
-            Leaderboard
-          </Link>
-          <Link
-            href="/trophies/new"
-            className="block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center hover:bg-white/10"
-          >
-            Ajukan
-          </Link>
-          <Link
-            href="/me"
-            className="block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center hover:bg-white/10"
-          >
-            Profil
-          </Link>
-        </nav>
+        <SiteBottomNav />
       </footer>
     </div>
   );
