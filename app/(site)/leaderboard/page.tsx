@@ -51,7 +51,7 @@ export default async function LeaderboardPage({ searchParams }: any) {
   });
 
   return (
-    <div className="mx-auto w-full max-w-md">
+    <div className="mx-auto w-full max-w-md px-2 sm:px-0">
       <header className="mb-4 flex items-center gap-2">
         <Trophy className="h-5 w-5 text-brand-500 dark:text-yellow-400" />
         <h1 className="text-xl font-semibold">Leaderboard</h1>
