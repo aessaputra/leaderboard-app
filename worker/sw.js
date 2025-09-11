@@ -18,6 +18,16 @@ clientsClaim();
 precacheAndRoute(self.__WB_MANIFEST || []);
 cleanupOutdatedCaches();
 
+// Warm important pages into a small pages cache (including offline)
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open('pages');
+      await cache.addAll(['/offline']);
+    })()
+  );
+});
+
 // ===== Static assets =====
 registerRoute(
   ({ request }) =>
@@ -25,6 +35,15 @@ registerRoute(
   new CacheFirst({
     cacheName: 'static-assets',
     matchOptions: { ignoreSearch: true },
+  })
+);
+
+// ===== Documents (pages): Network-first with cache fallback =====
+registerRoute(
+  ({ request }) => request.mode === 'navigate',
+  new NetworkFirst({
+    cacheName: 'pages',
+    networkTimeoutSeconds: 5,
   })
 );
 

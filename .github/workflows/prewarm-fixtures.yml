@@ -19,12 +19,28 @@ jobs:
           AUTH: ${{ secrets.CRON_SECRET }}
         run: |
           if [ -z "$BASE_URL" ]; then echo "Missing BASE_URL secret (e.g. https://your-domain.vercel.app)"; exit 1; fi
-          curl -fsS -H "Authorization: Bearer $AUTH" "$BASE_URL/api/fixtures?competitions=PL,PD,SA,BL1,FL1&next=10" || true
+          url="$BASE_URL/api/fixtures?competitions=PL,PD,SA,BL1,FL1&next=10"
+          echo "Fetching: $url"
+          http_code=$(curl -sS -H "Authorization: Bearer $AUTH" -o resp.json -w "%{http_code}" "$url") || true
+          echo "HTTP $http_code"
+          echo "Response body:" && cat resp.json || true
+          # Do not fail the job, but surface the error body if 4xx/5xx
+          if [ "$http_code" -ge 400 ]; then
+            echo "::warning::Prewarm Top Leagues failed with HTTP $http_code"
+          fi
+          rm -f resp.json
 
       - name: Prewarm UCL/UEL
         env:
           BASE_URL: ${{ secrets.BASE_URL }}
           AUTH: ${{ secrets.CRON_SECRET }}
         run: |
-          curl -fsS -H "Authorization: Bearer $AUTH" "$BASE_URL/api/fixtures?competitions=CL,EL&next=8" || true
-
+          url="$BASE_URL/api/fixtures?competitions=CL,EL&next=8"
+          echo "Fetching: $url"
+          http_code=$(curl -sS -H "Authorization: Bearer $AUTH" -o resp.json -w "%{http_code}" "$url") || true
+          echo "HTTP $http_code"
+          echo "Response body:" && cat resp.json || true
+          if [ "$http_code" -ge 400 ]; then
+            echo "::warning::Prewarm UCL/UEL failed with HTTP $http_code"
+          fi
+          rm -f resp.json
