@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
-import { LogOut, CheckCheck, Hourglass } from 'lucide-react';
+// icons not needed here
 import LogoutButton from '@/components/auth/LogoutButton';
 import ThemeToggleButton from '@/components/common/ThemeToggleButton';
 
@@ -30,12 +30,7 @@ export default async function MePage() {
     _count: { _all: true },
   });
 
-  const recent = await prisma.trophyAward.findMany({
-    where: { userId },
-    orderBy: { createdAt: 'desc' },
-    take: 10,
-    select: { competition: true, createdAt: true, approved: true, id: true },
-  });
+  // riwayat ringkas di halaman ini dihapus; lihat /me/riwayat
 
   const ucl = grouped.find((g) => g.competition === 'UCL')?._count._all ?? 0;
   const europa =
@@ -68,48 +63,14 @@ export default async function MePage() {
         <Stat label="Total" value={total} />
       </section>
 
-      <h2 className="mt-6 mb-2 text-sm font-semibold tracking-wide text-gray-600 dark:text-gray-300">
-        Riwayat Terakhir
-      </h2>
-
-      <ul className="space-y-3">
-        {recent.length === 0 ? (
-          <li className="rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-gray-400">
-            Belum ada trophy.
-          </li>
-        ) : (
-          recent.map((r) => (
-            <li
-              key={r.id}
-              className="rounded-xl border border-gray-200 bg-white p-4 transition-colors dark:border-white/10 dark:bg-white/5"
-            >
-              <div className="flex items-center justify-between">
-                <span className="rounded-full border border-gray-200 bg-gray-50 px-2.5 py-1 text-[11px] font-semibold dark:border-white/15 dark:bg-white/5">
-                  {r.competition}
-                </span>
-
-                {r.approved ? (
-                  <span className="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold 
-                    border-emerald-600/20 bg-emerald-50 text-emerald-700 dark:border-emerald-400/30 dark:bg-emerald-500/10 dark:text-emerald-200">
-                    <CheckCheck className="h-3.5 w-3.5" />
-                    Approved
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold 
-                    border-amber-600/20 bg-amber-50 text-amber-700 dark:border-amber-400/30 dark:bg-amber-500/10 dark:text-amber-200">
-                    <Hourglass className="h-3.5 w-3.5" />
-                    Menunggu
-                  </span>
-                )}
-              </div>
-
-              <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                {new Date(r.createdAt).toLocaleString()}
-              </div>
-            </li>
-          ))
-        )}
-      </ul>
+      <div className="mt-6">
+        <a
+          href="/me/riwayat"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 dark:border-white/10 dark:bg-white/10 dark:text-white"
+        >
+          Riwayat Saya
+        </a>
+      </div>
     </main>
   );
 }

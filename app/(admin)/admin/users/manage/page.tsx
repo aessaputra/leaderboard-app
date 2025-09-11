@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
+import bcrypt from 'bcrypt';
 
 export default async function ManageUsersPage({ searchParams }: { searchParams: any }) {
   const session = await getServerSession(authOptions);
@@ -36,11 +37,23 @@ export default async function ManageUsersPage({ searchParams }: { searchParams: 
     const name = String(formData.get('name') ?? '');
     const email = String(formData.get('email') ?? '');
     const approved = formData.get('approved') ? true : false;
+    const passwordRaw = String(formData.get('password') ?? '');
 
     if (!id) throw new Error('Invalid user id');
     if (id === s.user.id) throw new Error('Tidak boleh mengubah akun admin saat ini');
 
-    await prisma.user.update({ where: { id }, data: { name, email, approved } });
+    const data: { name: string; email: string; approved: boolean; password?: string } = {
+      name,
+      email,
+      approved,
+    };
+    const pw = passwordRaw.trim();
+    if (pw.length > 0) {
+      if (pw.length < 6) throw new Error('Password minimal 6 karakter');
+      data.password = await bcrypt.hash(pw, 10);
+    }
+
+    await prisma.user.update({ where: { id }, data });
     revalidatePath('/admin/users/manage');
     redirect(`/admin/users/manage?userId=${id}`);
   }
@@ -128,6 +141,15 @@ export default async function ManageUsersPage({ searchParams }: { searchParams: 
                     name="email"
                     type="email"
                     defaultValue={selected.email}
+                    className="w-full rounded-lg border border-gray-200 bg-white p-2 text-sm dark:border-white/10 dark:bg-white/5"
+                  />
+                </label>
+                <label className="block">
+                  <div className="mb-1 text-xs text-gray-500 dark:text-gray-400">Password Baru</div>
+                  <input
+                    name="password"
+                    type="password"
+                    placeholder="Kosongkan jika tidak diubah"
                     className="w-full rounded-lg border border-gray-200 bg-white p-2 text-sm dark:border-white/10 dark:bg-white/5"
                   />
                 </label>
