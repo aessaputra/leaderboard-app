@@ -4,10 +4,6 @@
     {
       "path": "/api/admin/gallery/cleanup",
       "schedule": "0 10 * * *"
-    },
-    {
-      "path": "/api/fixtures?competitions=PL,PD,SA,BL1,FL1&next=10",
-      "schedule": "*/30 * * * *"
     }
   ]
 }

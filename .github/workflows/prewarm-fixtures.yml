@@ -1,0 +1,30 @@
+name: Prewarm Fixtures Cache
+
+on:
+  schedule:
+    - cron: "*/30 * * * *" # every 30 minutes (UTC)
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  warm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Prewarm Top Leagues
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          AUTH: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$BASE_URL" ]; then echo "Missing BASE_URL secret (e.g. https://your-domain.vercel.app)"; exit 1; fi
+          curl -fsS -H "Authorization: Bearer $AUTH" "$BASE_URL/api/fixtures?competitions=PL,PD,SA,BL1,FL1&next=10" || true
+
+      - name: Prewarm UCL/UEL
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          AUTH: ${{ secrets.CRON_SECRET }}
+        run: |
+          curl -fsS -H "Authorization: Bearer $AUTH" "$BASE_URL/api/fixtures?competitions=CL,EL&next=8" || true
+
