@@ -4,7 +4,10 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "transparent",
+  // The status bar color for installed PWA on Android.
+  // Use a solid color instead of "transparent" so it follows the page color
+  // on devices that don't support transparent theme colors.
+  "theme_color": "#ffffff",
   "icons": [
     { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/icons/icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
