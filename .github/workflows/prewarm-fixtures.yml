@@ -18,7 +18,7 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           AUTH: ${{ secrets.CRON_SECRET }}
         run: |
-          if [ -z "$BASE_URL" ]; then echo "Missing BASE_URL secret (e.g. https://your-domain.vercel.app)"; exit 1; fi
+          if [ -z "$BASE_URL" ]; then echo "Missing BASE_URL secret (e.g. https://leaderboard.aes.my.id)"; exit 1; fi
           url="$BASE_URL/api/fixtures?competitions=PL,PD,SA,BL1,FL1&next=10"
           echo "Fetching: $url"
           http_code=$(curl -sS -H "Authorization: Bearer $AUTH" -o resp.json -w "%{http_code}" "$url") || true
