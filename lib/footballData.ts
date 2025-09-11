@@ -94,10 +94,14 @@ export async function getFixturesFD(args: GetFixturesArgs) {
   let dateFrom = args.dateFrom;
   let dateTo = args.dateTo;
 
+  // Football-Data.org restricts date ranges to a maximum of 10 days.
+  // When emulating "next N" without explicit dates, query a safe 10-day window
+  // (inclusive), then filter upcoming locally.
   if (args.next && !dateFrom && !dateTo) {
     const from = new Date();
     const to = new Date();
-    to.setUTCDate(to.getUTCDate() + 30);
+    // Use +9 so inclusive [from, to] window is 10 days total
+    to.setUTCDate(to.getUTCDate() + 9);
     dateFrom = toISODate(from);
     dateTo = toISODate(to);
   }
