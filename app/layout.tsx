@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'PES Trophy',
+  manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -25,11 +26,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id">
-      <head>
-        {/* Serve different manifests for light/dark so installed PWA picks proper status bar color */}
-        <link rel="manifest" href="/manifest-light.json" media="(prefers-color-scheme: light)" />
-        <link rel="manifest" href="/manifest-dark.json" media="(prefers-color-scheme: dark)" />
-      </head>
       <body className="bg-white text-gray-900 dark:bg-gray-900 dark:text-white">{children}</body>
     </html>
   );
