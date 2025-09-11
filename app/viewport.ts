@@ -1,14 +1,14 @@
-import type { Viewport } from 'next';
+import type { Viewport } from "next";
 
 const viewport: Viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
-  viewportFit: 'cover',
+  viewportFit: "cover",
   // Ensure the OS status bar matches the page background
   // (Android uses this meta; iOS Safari also respects it on recent versions).
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#111827' },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#111827" },
   ],
 };
 
