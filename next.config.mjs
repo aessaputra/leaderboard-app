@@ -13,6 +13,26 @@ const base = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  images: {
+    dangerouslyAllowSVG: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'media.api-sports.io',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'crests.football-data.org',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
 export default withPWA({

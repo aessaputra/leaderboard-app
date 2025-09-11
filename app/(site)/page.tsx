@@ -40,14 +40,24 @@ export default async function Home() {
 
       {/* Home-only actions */}
       <section className="mt-6">
-        <CTA
-          href="/gallery"
-          variant="primary"
-          className="w-full rounded-2xl border border-gray-200 bg-white text-gray-900 shadow-sm hover:bg-gray-50 dark:border-white/10 dark:bg-white/10 dark:text-white dark:hover:bg-white/15"
-        >
-          <Images className="h-4 w-4" />
-          Buka Galeri
-        </CTA>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <CTA
+            href="/gallery"
+            variant="primary"
+            className="w-full rounded-2xl border border-gray-200 bg-white text-gray-900 shadow-sm hover:bg-gray-50 dark:border-white/10 dark:bg-white/10 dark:text-white dark:hover:bg-white/15"
+            aria-label="Buka galeri"
+          >
+            <Images className="h-4 w-4" />
+            Buka Galeri
+          </CTA>
+          <CTA
+            href="/fixtures"
+            className="w-full rounded-2xl border border-gray-200 bg-white text-gray-900 shadow-sm hover:bg-gray-50 dark:border-white/10 dark:bg-white/10 dark:text-white dark:hover:bg-white/15"
+            aria-label="Lihat Jadwal Pertandingan"
+          >
+            Lihat Jadwal
+          </CTA>
+        </div>
       </section>
     </main>
   );
