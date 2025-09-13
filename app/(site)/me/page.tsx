@@ -2,11 +2,14 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
-// icons not needed here
 import LogoutButton from '@/components/auth/LogoutButton';
 import ThemeToggleButton from '@/components/common/ThemeToggleButton';
 
-export default async function MePage() {
+export default async function MePage({
+  searchParams,
+}: {
+  searchParams?: { submitted?: string };
+}) {
   const session = await getServerSession(authOptions);
   if (!session) redirect('/login');
 
@@ -37,6 +40,8 @@ export default async function MePage() {
     grouped.find((g) => g.competition === 'EUROPA')?._count._all ?? 0;
   const total = ucl + europa;
 
+  const showSubmittedAlert = searchParams?.submitted === '1';
+
   return (
     <main className="mx-auto w-full max-w-md p-5 pb-28">
       {/* --- NEW: header dengan nama --- */}
@@ -46,8 +51,7 @@ export default async function MePage() {
             {displayName.slice(0, 1).toUpperCase()}
           </div>
           <div>
-            <h1 className="text-xl font-bold leading-none">Profil Saya</h1>
-            <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">Halo, {displayName}</p>
+            <h1 className="text-xl font-bold leading-none">{displayName}</h1>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -55,6 +59,12 @@ export default async function MePage() {
           <LogoutButton label="Logout" />
         </div>
       </header>
+
+      {showSubmittedAlert && (
+        <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 shadow-sm dark:border-emerald-400/30 dark:bg-emerald-500/15 dark:text-emerald-200">
+          Pengajuan trophy berhasil. Menunggu FIFA memberikan trophy.
+        </div>
+      )}
 
       {/* statistik singkat */}
       <section className="grid grid-cols-3 gap-3">

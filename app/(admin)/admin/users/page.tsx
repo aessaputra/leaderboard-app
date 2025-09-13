@@ -67,7 +67,11 @@ export default async function AdminUsersPage() {
                     </div>
                     <div className="mt-1 flex items-center gap-1 text-[11px] text-gray-500">
                       <Clock className="h-3.5 w-3.5" />
-                      Daftar: {new Date(u.createdAt).toLocaleString()}
+                      Daftar: {new Date(u.createdAt).toLocaleString('id-ID', {
+                        timeZone: 'Asia/Jakarta',
+                        dateStyle: 'medium',
+                        timeStyle: 'short',
+                      })}
                     </div>
                   </div>
 

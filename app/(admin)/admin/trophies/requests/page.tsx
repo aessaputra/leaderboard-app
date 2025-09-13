@@ -82,7 +82,11 @@ export default async function RequestsPage() {
                     </span>
                     <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                       <Clock className="h-3.5 w-3.5" />
-                      {new Date(t.createdAt).toLocaleString()}
+                      {new Date(t.createdAt).toLocaleString('id-ID', {
+                        timeZone: 'Asia/Jakarta',
+                        dateStyle: 'medium',
+                        timeStyle: 'short',
+                      })}
                     </span>
                   </div>
                   <div className="mt-1 text-[11px] text-gray-500">

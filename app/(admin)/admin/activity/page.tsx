@@ -49,7 +49,11 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
                     {t.user?.name ?? t.user?.email ?? 'Unknown'}
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {t.competition} • {new Date(t.createdAt).toLocaleString()}
+                    {t.competition} • {new Date(t.createdAt).toLocaleString('id-ID', {
+                      timeZone: 'Asia/Jakarta',
+                      dateStyle: 'medium',
+                      timeStyle: 'short',
+                    })}
                   </div>
                 </div>
                 <span

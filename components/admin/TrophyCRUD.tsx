@@ -319,7 +319,11 @@ export default function TrophyCRUD({ users }: { users: UserMini[] }) {
                     )}
                   </td>
                   <td className="py-2 pr-4">
-                    {new Date(t.createdAt).toLocaleString()}
+                    {new Date(t.createdAt).toLocaleString('id-ID', {
+                      timeZone: 'Asia/Jakarta',
+                      dateStyle: 'medium',
+                      timeStyle: 'short',
+                    })}
                   </td>
                   <td className="py-2 pr-4">
                     {editRow === t.id ? (

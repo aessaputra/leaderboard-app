@@ -8,6 +8,7 @@ import { Images } from 'lucide-react';
 export default async function Home() {
   const session = await getServerSession(authOptions);
   const user = session?.user;
+  const displayName = user?.name ?? (user?.email ? user.email.split('@')[0] : '');
 
   let counts = { ucl: 0, europa: 0, total: 0 };
   if (user) {
@@ -24,7 +25,10 @@ export default async function Home() {
 
   return (
     <main className="relative mx-auto max-w-md p-5 pb-28">
-      {/* Title only */}
+      {/* Greeting above title */}
+      {user && displayName && (
+        <p className="mt-1 text-center text-xs text-gray-600 dark:text-gray-400">Halo, {displayName}</p>
+      )}
       <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-center text-gray-900 dark:text-gray-100">
         Trophy Kite
       </h1>
