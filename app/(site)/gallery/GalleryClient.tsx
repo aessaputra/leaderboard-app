@@ -1,4 +1,5 @@
 "use client";
+import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Upload, X } from 'lucide-react';
 import Dialog from '@/components/ui/dialog';
@@ -142,13 +143,16 @@ export default function GalleryClient() {
               className="group relative aspect-square overflow-hidden rounded-2xl shadow focus:outline-none focus:ring-2 focus:ring-brand-500/30"
               onClick={() => setLightbox(it)}
             >
-              <img
-                src={it.thumbUrl || it.displayUrl}
-                alt={it.caption || 'Photo'}
-                className="block h-full w-full object-cover"
-                loading="lazy"
-                onError={() => handleImgError(it.id)}
-              />
+              <div className="relative h-full w-full">
+                <Image
+                  src={(it.thumbUrl || it.displayUrl || it.url) as string}
+                  alt={it.caption || 'Photo'}
+                  fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                  className="object-cover"
+                  onError={() => handleImgError(it.id)}
+                />
+              </div>
               {it.caption ? (
                 <div className="pointer-events-none absolute left-1 right-1 bottom-1 rounded-xl bg-black/45 p-2 text-xs text-white">
                   <p className="line-clamp-2">{it.caption}</p>
@@ -294,11 +298,13 @@ export default function GalleryClient() {
               </button>
             </div>
 
-            <div className="relative">
-              <img
-                src={lightbox.displayUrl}
+            <div className="relative h-[85svh]">
+              <Image
+                src={lightbox.displayUrl || lightbox.url}
                 alt={lightbox.caption || 'Photo'}
-                className="mx-auto max-h-[85svh] w-full object-contain"
+                fill
+                sizes="100vw"
+                className="object-contain"
                 style={{ touchAction: 'manipulation' }}
                 onError={() => handleImgError(lightbox.id)}
               />

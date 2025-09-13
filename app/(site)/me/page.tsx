@@ -5,11 +5,7 @@ import { redirect } from 'next/navigation';
 import LogoutButton from '@/components/auth/LogoutButton';
 import ThemeToggleButton from '@/components/common/ThemeToggleButton';
 
-export default async function MePage({
-  searchParams,
-}: {
-  searchParams?: { submitted?: string };
-}) {
+export default async function MePage({ searchParams }: { searchParams: any }) {
   const session = await getServerSession(authOptions);
   if (!session) redirect('/login');
 
@@ -40,7 +36,8 @@ export default async function MePage({
     grouped.find((g) => g.competition === 'EUROPA')?._count._all ?? 0;
   const total = ucl + europa;
 
-  const showSubmittedAlert = searchParams?.submitted === '1';
+  const sp = await searchParams;
+  const showSubmittedAlert = sp?.submitted === '1';
 
   return (
     <main className="mx-auto w-full max-w-md p-5 pb-28">

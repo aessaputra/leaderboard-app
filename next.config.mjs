@@ -31,6 +31,17 @@ const base = {
         hostname: 'upload.wikimedia.org',
         pathname: '/**',
       },
+      // Proxy gallery images hosted on ImgBB through Next/Image
+      {
+        protocol: 'https',
+        hostname: 'i.ibb.co',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'ibb.co',
+        pathname: '/**',
+      },
     ],
   },
 };

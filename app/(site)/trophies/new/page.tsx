@@ -6,13 +6,11 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import SubmitButton from "./submit-button";
 
-export default async function NewTrophyPage({
-  searchParams,
-}: {
-  searchParams?: { submitted?: string };
-}) {
+export default async function NewTrophyPage({ searchParams }: { searchParams: any }) {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
+
+  const sp = await searchParams;
 
   async function submit(formData: FormData) {
     "use server";
@@ -43,7 +41,7 @@ export default async function NewTrophyPage({
     <main className="mx-auto w-full max-w-md p-5">
       <h1 className="mb-4 text-2xl font-semibold">Ajukan Trophy</h1>
 
-      {searchParams?.submitted === "1" && (
+      {sp?.submitted === "1" && (
         <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 shadow-sm dark:border-emerald-400/30 dark:bg-emerald-500/15 dark:text-emerald-200">
           Pengajuan trophy berhasil. Menunggu FIFA memberikan trophy.
         </div>
