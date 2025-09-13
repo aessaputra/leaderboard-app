@@ -50,21 +50,27 @@ export default function Filters({ initialFixtures }: { initialFixtures: Fixture[
   }, [preset]);
 
   const [debouncedKey, setDebouncedKey] = useState<string | null>(null);
+  const [isDebouncing, setIsDebouncing] = useState(false);
   useEffect(() => {
     const competitions = selected.join(',');
     const key = `/api/fixtures?dateFrom=${from}&dateTo=${to}&competitions=${competitions}`;
-    const h = setTimeout(() => setDebouncedKey(key), 500);
+    setIsDebouncing(true);
+    const h = setTimeout(() => {
+      setDebouncedKey(key);
+      setIsDebouncing(false);
+    }, 500);
     return () => clearTimeout(h);
   }, [from, to, selected]);
 
   const { data, isLoading } = useSWR<{ fixtures: Fixture[] }>(debouncedKey, fetcher, {
     dedupingInterval: 30_000,
     revalidateOnFocus: false,
-    keepPreviousData: true,
+    keepPreviousData: false,
     fallbackData: debouncedKey ? undefined : { fixtures: initialFixtures },
   });
 
   const fixtures = data?.fixtures ?? initialFixtures ?? [];
+  const loading = isDebouncing || isLoading;
   const crestMap = useMemo(() => {
     const map: Record<string, string> = {};
     for (const fx of fixtures) {
@@ -201,8 +207,8 @@ export default function Filters({ initialFixtures }: { initialFixtures: Fixture[
         {countBadge}
       </div>
 
-      {isLoading && fixtures.length === 0 ? (
-        <SkeletonGrid />
+      {loading ? (
+        <LoadingSpinner />
       ) : fixtures.length === 0 ? (
         <EmptySuggestions onPick7d={() => setPreset('7d')} onResetLeagues={() => setSelected(TOP_LEAGUES.map(l => l.code))} />
       ) : (
@@ -216,15 +222,11 @@ export default function Filters({ initialFixtures }: { initialFixtures: Fixture[
   );
 }
 
-function SkeletonGrid() {
+function LoadingSpinner() {
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="h-28 animate-pulse rounded-xl border border-gray-200 bg-gray-100 dark:border-white/10 dark:bg-white/10"
-        />
-      ))}
+    <div className="flex items-center justify-center py-10" aria-busy>
+      <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-brand-600 dark:border-white/20 dark:border-t-brand-400" />
+      <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">Memuat jadwal…</span>
     </div>
   );
 }
