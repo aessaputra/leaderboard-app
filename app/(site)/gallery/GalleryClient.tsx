@@ -1,7 +1,7 @@
 "use client";
 import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Camera, X } from 'lucide-react';
+import { Camera, X, ChevronLeft, ChevronRight, Download, ZoomIn, ZoomOut } from 'lucide-react';
 import Dialog from '@/components/ui/dialog';
 
 type UserLite = { id: string; name: string | null };
@@ -68,7 +68,10 @@ export default function GalleryClient() {
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [lightbox, setLightbox] = useState<GalleryItem | null>(null);
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const current = currentIndex != null ? items[currentIndex] ?? null : null;
+  const [imgLoading, setImgLoading] = useState(false);
+  const [zoom, setZoom] = useState(1);
 
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploadState, setUploadState] = useState<UploadState>({ status: 'idle' });
@@ -141,7 +144,12 @@ export default function GalleryClient() {
             <button
               key={it.id}
               className="group relative aspect-square overflow-hidden rounded-2xl shadow focus:outline-none focus:ring-2 focus:ring-brand-500/30"
-              onClick={() => setLightbox(it)}
+              onClick={() => {
+                const idx = items.findIndex((x) => x.id === it.id);
+                setCurrentIndex(idx >= 0 ? idx : 0);
+                setZoom(1);
+                setImgLoading(true);
+              }}
             >
               <div className="relative h-full w-full">
                 <Image
@@ -277,41 +285,119 @@ export default function GalleryClient() {
       </Dialog>
 
       {/* Lightbox */}
-      <Dialog open={!!lightbox} onOpenChange={(o) => !o && setLightbox(null)}>
-        {lightbox ? (
-          <div className="grid gap-2">
-            <div className="flex items-center justify-between gap-2">
-              <div className="text-sm text-gray-500">
-                <span className="font-medium text-gray-900 dark:text-gray-100">
-                  {lightbox.uploader.name ?? 'User'}
-                </span>
-                <span className="mx-1">•</span>
-                <span>{fmtRelative(lightbox.createdAt)}</span>
+      <Dialog
+        open={currentIndex !== null}
+        onOpenChange={(o) => {
+          if (!o) {
+            setCurrentIndex(null);
+            setZoom(1);
+            setImgLoading(false);
+          }
+        }}
+        className="max-w-[100svw] rounded-none bg-transparent p-0 text-white"
+      >
+        {current ? (
+          <div className="relative">
+            {/* Top bar */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 select-none bg-gradient-to-b from-black/60 to-transparent px-3 pt-3">
+              <div className="pointer-events-auto flex items-center justify-between gap-2">
+                <div className="text-sm text-gray-200">
+                  <span className="font-medium text-white">{current.uploader.name ?? 'User'}</span>
+                  <span className="mx-1">•</span>
+                  <span className="text-gray-300">{fmtRelative(current.createdAt)}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <a
+                    href={current.url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="rounded-md p-1.5 text-white/80 hover:bg-white/10 hover:text-white"
+                    title="Buka asli"
+                  >
+                    <Download className="h-5 w-5" />
+                  </a>
+                  <button
+                    onClick={() => setCurrentIndex((i) => (i != null && i > 0 ? i - 1 : i))}
+                    disabled={currentIndex === 0}
+                    className="rounded-md p-1.5 text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-40"
+                    title="Sebelumnya"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() =>
+                      setCurrentIndex((i) => (i != null && i < items.length - 1 ? i + 1 : i))
+                    }
+                    disabled={currentIndex === items.length - 1}
+                    className="rounded-md p-1.5 text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-40"
+                    title="Berikutnya"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => setCurrentIndex(null)}
+                    className="rounded-md p-1.5 text-white/80 hover:bg-white/10 hover:text-white"
+                    aria-label="Tutup"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
-              <button
-                className="rounded-lg p-1 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:hover:bg-white/10"
-                aria-label="Tutup"
-                onClick={() => setLightbox(null)}
+            </div>
+
+            {/* Image area with zoom, fixed 9:16 canvas */}
+            <div className="relative mx-auto h-[90svh] aspect-[9/16] overflow-hidden rounded-md bg-black">
+              {imgLoading && (
+                <div className="absolute inset-0 z-10 flex items-center justify-center">
+                  <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                </div>
+              )}
+              <div
+                className={`relative h-full w-full select-none ${
+                  zoom > 1 ? 'cursor-zoom-out' : 'cursor-zoom-in'
+                }`}
+                onDoubleClick={() => setZoom((z) => (z > 1 ? 1 : 2))}
               >
-                <X className="h-5 w-5" />
-              </button>
+                <Image
+                  src={current.displayUrl || current.url}
+                  alt={current.caption || 'Photo'}
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                  style={{ touchAction: 'manipulation', transform: `scale(${zoom})`, transformOrigin: 'center center' }}
+                  onLoadingComplete={() => setImgLoading(false)}
+                  onError={() => setImgLoading(false)}
+                />
+              </div>
             </div>
 
-            <div className="relative h-[85svh]">
-              <Image
-                src={lightbox.displayUrl || lightbox.url}
-                alt={lightbox.caption || 'Photo'}
-                fill
-                sizes="100vw"
-                className="object-contain"
-                style={{ touchAction: 'manipulation' }}
-                onError={() => handleImgError(lightbox.id)}
-              />
+            {/* Bottom bar caption + zoom controls */}
+            <div className="mx-auto mt-3 flex w-[min(100svw,calc(90svh*0.5625))] max-w-full items-center justify-between gap-2 px-2">
+              {current.caption ? (
+                <p className="max-w-[80%] rounded-md p-2 text-sm bg-black/70 text-white shadow-sm dark:bg-white/10 dark:text-gray-100">
+                  {current.caption}
+                </p>
+              ) : (
+                <span />
+              )}
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setZoom((z) => Math.max(1, Number((z - 0.25).toFixed(2))))}
+                  disabled={zoom <= 1}
+                  className="rounded-md p-1.5 text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-40"
+                  title="Zoom out"
+                >
+                  <ZoomOut className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => setZoom((z) => Math.min(3, Number((z + 0.25).toFixed(2))))}
+                  className="rounded-md p-1.5 text-white/80 hover:bg-white/10 hover:text-white"
+                  title="Zoom in"
+                >
+                  <ZoomIn className="h-5 w-5" />
+                </button>
+              </div>
             </div>
-
-            {lightbox.caption ? (
-              <p className="text-sm text-gray-700 dark:text-gray-200">{lightbox.caption}</p>
-            ) : null}
           </div>
         ) : null}
       </Dialog>

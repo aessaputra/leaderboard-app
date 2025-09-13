@@ -7,9 +7,10 @@ type Props = {
   onOpenChange: (open: boolean) => void;
   children: React.ReactNode;
   labelledBy?: string;
+  className?: string;
 };
 
-export default function Dialog({ open, onOpenChange, children, labelledBy }: Props) {
+export default function Dialog({ open, onOpenChange, children, labelledBy, className }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const lastActiveRef = useRef<HTMLElement | null>(null);
 
@@ -82,7 +83,9 @@ export default function Dialog({ open, onOpenChange, children, labelledBy }: Pro
       <div className="absolute inset-0 bg-black/60" />
       <div
         ref={containerRef}
-        className="relative z-10 w-full max-w-2xl rounded-2xl bg-white p-3 shadow-xl outline-none dark:bg-gray-900"
+        className={`relative z-10 w-full max-w-2xl rounded-2xl bg-white p-3 shadow-xl outline-none dark:bg-gray-900 ${
+          className || ''
+        }`}
       >
         {children}
       </div>
