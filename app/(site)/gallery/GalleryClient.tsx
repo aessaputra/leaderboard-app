@@ -1,7 +1,7 @@
 "use client";
 import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Upload, X } from 'lucide-react';
+import { Camera, X } from 'lucide-react';
 import Dialog from '@/components/ui/dialog';
 
 type UserLite = { id: string; name: string | null };
@@ -179,8 +179,7 @@ export default function GalleryClient() {
           }}
           aria-label="Buka dialog upload"
         >
-          <Upload className="h-4 w-4" />
-          <span>Upload</span>
+          <Camera className="h-4 w-4" />
         </button>
       </div>
       {grid}
