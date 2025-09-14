@@ -1,7 +1,7 @@
 "use client";
 import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Camera, X, ChevronLeft, ChevronRight, Download, ZoomIn, ZoomOut } from 'lucide-react';
+import { Camera, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
 import Dialog from '@/components/ui/dialog';
 
 type UserLite = { id: string; name: string | null };
@@ -294,28 +294,34 @@ export default function GalleryClient() {
             setImgLoading(false);
           }
         }}
-        className="max-w-[100svw] rounded-none bg-transparent p-0 text-white"
+        className="!max-w-none !rounded-none !bg-transparent !p-0 min-h-[100svh] text-white"
+        overlayClassName="!p-0"
       >
         {current ? (
-          <div className="relative">
-            {/* Top bar */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 select-none bg-gradient-to-b from-black/60 to-transparent px-3 pt-3">
-              <div className="pointer-events-auto flex items-center justify-between gap-2">
-                <div className="text-sm text-gray-200">
+          <div className="relative flex min-h-[100svh] items-center justify-center">
+            {/* Blurred background from the image */}
+            <div className="pointer-events-none absolute inset-0 -z-10">
+              <Image
+                src={current.displayUrl || current.url}
+                alt=""
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover scale-110 blur-2xl opacity-60"
+              />
+              <div className="absolute inset-0 bg-black/60" />
+            </div>
+
+            {/* Centered column: user, image, caption, controls */}
+            <div className="mx-auto flex w-[min(92svw,calc(78svh*0.5625))] max-w-full flex-col gap-2">
+              {/* Uploader + time above image */}
+              <div className="flex items-center justify-between text-sm text-gray-200 px-1">
+                <div>
                   <span className="font-medium text-white">{current.uploader.name ?? 'User'}</span>
                   <span className="mx-1">•</span>
                   <span className="text-gray-300">{fmtRelative(current.createdAt)}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <a
-                    href={current.url}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="rounded-md p-1.5 text-white/80 hover:bg-white/10 hover:text-white"
-                    title="Buka asli"
-                  >
-                    <Download className="h-5 w-5" />
-                  </a>
                   <button
                     onClick={() => setCurrentIndex((i) => (i != null && i > 0 ? i - 1 : i))}
                     disabled={currentIndex === 0}
@@ -325,9 +331,7 @@ export default function GalleryClient() {
                     <ChevronLeft className="h-5 w-5" />
                   </button>
                   <button
-                    onClick={() =>
-                      setCurrentIndex((i) => (i != null && i < items.length - 1 ? i + 1 : i))
-                    }
+                    onClick={() => setCurrentIndex((i) => (i != null && i < items.length - 1 ? i + 1 : i))}
                     disabled={currentIndex === items.length - 1}
                     className="rounded-md p-1.5 text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-40"
                     title="Berikutnya"
@@ -338,64 +342,65 @@ export default function GalleryClient() {
                     onClick={() => setCurrentIndex(null)}
                     className="rounded-md p-1.5 text-white/80 hover:bg-white/10 hover:text-white"
                     aria-label="Tutup"
+                    title="Tutup"
                   >
                     <X className="h-5 w-5" />
                   </button>
                 </div>
               </div>
-            </div>
 
-            {/* Image area with zoom, fixed 9:16 canvas */}
-            <div className="relative mx-auto h-[90svh] aspect-[9/16] overflow-hidden rounded-md bg-black">
-              {imgLoading && (
-                <div className="absolute inset-0 z-10 flex items-center justify-center">
-                  <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+              {/* Image area with zoom; smaller canvas */}
+              <div className="relative mx-auto w-full aspect-[9/16] overflow-hidden rounded-md bg-black">
+                {imgLoading && (
+                  <div className="absolute inset-0 z-10 flex items-center justify-center">
+                    <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  </div>
+                )}
+                <div
+                  className={`relative h-full w-full select-none ${
+                    zoom > 1 ? 'cursor-zoom-out' : 'cursor-zoom-in'
+                  }`}
+                  onDoubleClick={() => setZoom((z) => (z > 1 ? 1 : 2))}
+                >
+                  <Image
+                    src={current.displayUrl || current.url}
+                    alt={current.caption || 'Photo'}
+                    fill
+                    sizes="100vw"
+                    className="object-contain object-center"
+                    style={{ touchAction: 'manipulation', transform: `scale(${zoom})`, transformOrigin: 'center center' }}
+                    onLoadingComplete={() => setImgLoading(false)}
+                    onError={() => setImgLoading(false)}
+                  />
                 </div>
-              )}
-              <div
-                className={`relative h-full w-full select-none ${
-                  zoom > 1 ? 'cursor-zoom-out' : 'cursor-zoom-in'
-                }`}
-                onDoubleClick={() => setZoom((z) => (z > 1 ? 1 : 2))}
-              >
-                <Image
-                  src={current.displayUrl || current.url}
-                  alt={current.caption || 'Photo'}
-                  fill
-                  sizes="100vw"
-                  className="object-cover"
-                  style={{ touchAction: 'manipulation', transform: `scale(${zoom})`, transformOrigin: 'center center' }}
-                  onLoadingComplete={() => setImgLoading(false)}
-                  onError={() => setImgLoading(false)}
-                />
               </div>
-            </div>
 
-            {/* Bottom bar caption + zoom controls */}
-            <div className="mx-auto mt-3 flex w-[min(100svw,calc(90svh*0.5625))] max-w-full items-center justify-between gap-2 px-2">
-              {current.caption ? (
-                <p className="max-w-[80%] rounded-md p-2 text-sm bg-black/70 text-white shadow-sm dark:bg-white/10 dark:text-gray-100">
-                  {current.caption}
-                </p>
-              ) : (
-                <span />
-              )}
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => setZoom((z) => Math.max(1, Number((z - 0.25).toFixed(2))))}
-                  disabled={zoom <= 1}
-                  className="rounded-md p-1.5 text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-40"
-                  title="Zoom out"
-                >
-                  <ZoomOut className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={() => setZoom((z) => Math.min(3, Number((z + 0.25).toFixed(2))))}
-                  className="rounded-md p-1.5 text-white/80 hover:bg-white/10 hover:text-white"
-                  title="Zoom in"
-                >
-                  <ZoomIn className="h-5 w-5" />
-                </button>
+              {/* Caption just below image + zoom controls at right */}
+              <div className="mx-auto flex w-full items-center justify-between gap-2 px-1">
+                {current.caption ? (
+                  <p className="max-w-[80%] rounded-md bg-black/60 p-2 text-sm text-white shadow-sm">
+                    {current.caption}
+                  </p>
+                ) : (
+                  <span />
+                )}
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setZoom((z) => Math.max(1, Number((z - 0.25).toFixed(2))))}
+                    disabled={zoom <= 1}
+                    className="rounded-md p-1.5 text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-40"
+                    title="Zoom out"
+                  >
+                    <ZoomOut className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => setZoom((z) => Math.min(3, Number((z + 0.25).toFixed(2))))}
+                    className="rounded-md p-1.5 text-white/80 hover:bg-white/10 hover:text-white"
+                    title="Zoom in"
+                  >
+                    <ZoomIn className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>

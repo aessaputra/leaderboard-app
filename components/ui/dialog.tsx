@@ -8,9 +8,10 @@ type Props = {
   children: React.ReactNode;
   labelledBy?: string;
   className?: string;
+  overlayClassName?: string;
 };
 
-export default function Dialog({ open, onOpenChange, children, labelledBy, className }: Props) {
+export default function Dialog({ open, onOpenChange, children, labelledBy, className, overlayClassName }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const lastActiveRef = useRef<HTMLElement | null>(null);
 
@@ -75,7 +76,7 @@ export default function Dialog({ open, onOpenChange, children, labelledBy, class
       role="dialog"
       aria-modal="true"
       aria-labelledby={labelledBy}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${overlayClassName || ''}`}
       onClick={(e) => {
         if (e.target === e.currentTarget) onOpenChange(false);
       }}
