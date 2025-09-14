@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { formatDateTimeWIB } from '@/lib/time';
 import { CheckCircle2, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default async function AdminActivityPage({ searchParams }: { searchParams: any }) {
@@ -49,8 +50,7 @@ export default async function AdminActivityPage({ searchParams }: { searchParams
                     {t.user?.name ?? t.user?.email ?? 'Unknown'}
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {t.competition} • {new Date(t.createdAt).toLocaleString('id-ID', {
-                      timeZone: 'Asia/Jakarta',
+                    {t.competition} • {formatDateTimeWIB(t.createdAt, {
                       dateStyle: 'medium',
                       timeStyle: 'short',
                     })}

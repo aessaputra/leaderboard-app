@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
+import { formatDateTimeWIB } from '@/lib/time';
 import { revalidatePath } from 'next/cache';
 // Logout dipindah ke header layout admin; BackButton dihilangkan (ada nav di footer)
 import { UserPlus, Mail, Clock, Check } from 'lucide-react';
@@ -67,8 +68,7 @@ export default async function AdminUsersPage() {
                     </div>
                     <div className="mt-1 flex items-center gap-1 text-[11px] text-gray-500">
                       <Clock className="h-3.5 w-3.5" />
-                      Daftar: {new Date(u.createdAt).toLocaleString('id-ID', {
-                        timeZone: 'Asia/Jakarta',
+                      Daftar: {formatDateTimeWIB(u.createdAt, {
                         dateStyle: 'medium',
                         timeStyle: 'short',
                       })}

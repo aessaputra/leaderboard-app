@@ -3,6 +3,7 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { formatDateTimeWIB } from '@/lib/time';
 import { Clock, Check, X } from 'lucide-react';
 
 export default async function RequestsPage() {
@@ -82,8 +83,7 @@ export default async function RequestsPage() {
                     </span>
                     <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                       <Clock className="h-3.5 w-3.5" />
-                      {new Date(t.createdAt).toLocaleString('id-ID', {
-                        timeZone: 'Asia/Jakarta',
+                      {formatDateTimeWIB(t.createdAt, {
                         dateStyle: 'medium',
                         timeStyle: 'short',
                       })}

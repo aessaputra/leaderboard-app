@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { formatDateTimeWIB } from '@/lib/time';
 
 type Competition = 'UCL' | 'EUROPA';
 type UserMini = { id: string; name: string | null };
@@ -319,8 +320,7 @@ export default function TrophyCRUD({ users }: { users: UserMini[] }) {
                     )}
                   </td>
                   <td className="py-2 pr-4">
-                    {new Date(t.createdAt).toLocaleString('id-ID', {
-                      timeZone: 'Asia/Jakarta',
+                    {formatDateTimeWIB(t.createdAt, {
                       dateStyle: 'medium',
                       timeStyle: 'short',
                     })}

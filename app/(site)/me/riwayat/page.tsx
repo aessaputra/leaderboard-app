@@ -1,6 +1,7 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { formatDateTimeWIB } from '@/lib/time';
 import BackButton from '@/components/BackButton';
 import Link from 'next/link';
 import { CheckCheck, Hourglass } from 'lucide-react';
@@ -85,7 +86,7 @@ export default async function RiwayatPage({
               </div>
 
               <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                {new Date(r.createdAt).toLocaleString()}
+                {formatDateTimeWIB(r.createdAt)}
               </div>
             </li>
           ))
